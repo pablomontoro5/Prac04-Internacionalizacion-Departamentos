@@ -21,48 +21,63 @@ public class I18n {
             }
 
             BufferedReader br = new BufferedReader(new InputStreamReader(is, "UTF-8"));
-
-            // -----------------------------
-            // DEPURACIÓN: función auxiliar
-            // -----------------------------
-            java.util.function.Function<String, String> leerLinea = (descripcion) -> {
-                try {
-                    String linea = br.readLine();
-                    System.out.println(descripcion + ": [" + linea + "]");
-                    return linea;
-                } catch (Exception e) {
-                    throw new RuntimeException("Error leyendo " + descripcion + ": " + e.getMessage());
+/*
+            // ==========================================================
+            // DEPURACIÓN PROFUNDA: muestra caracteres con sus códigos
+            // ==========================================================
+            System.out.println("=== DEPURANDO LÍNEAS (ASCII) ===");
+            String lineaDebug;
+            int n = 1;
+            while ((lineaDebug = br.readLine()) != null) {
+                System.out.print("Línea " + n + ": ");
+                if (lineaDebug.isEmpty()) {
+                    System.out.print("[VACÍA]");
                 }
-            };
+                for (char c : lineaDebug.toCharArray()) {
+                    System.out.print("[" + c + "=" + (int) c + "] ");
+                }
+                System.out.println();
+                n++;
+            }
+            System.out.println("================================");
 
-            // Leer número total de idiomas
-            int numIdiomas = Integer.parseInt(leerLinea.apply("numIdiomas").trim());
+            // Reabrir para la lectura REAL
+
+ */
+            is = I18n.class.getResourceAsStream("/idiomas.txt");
+            br = new BufferedReader(new InputStreamReader(is, "UTF-8"));
+
+            // -----------------------------------------------------------
+            // Empieza la carga normal
+            // -----------------------------------------------------------
+
+            int numIdiomas = Integer.parseInt(br.readLine().trim());
+            System.out.println("numIdiomas: " + numIdiomas);
 
             for (int i = 0; i < numIdiomas; i++) {
+                String codigo = br.readLine().trim();
+                System.out.println("codigo: [" + codigo + "]");
 
-                // Código del idioma
-                String codigo = leerLinea.apply("codigo").trim();
+                int numCadenas = Integer.parseInt(br.readLine().trim());
+                System.out.println("numCadenas: [" + numCadenas + "]");
 
-                // Número de cadenas
-                int numCadenas = Integer.parseInt(leerLinea.apply("numCadenas").trim());
-
-                // Leer cadenas
                 List<String> cadenas = new ArrayList<>();
                 for (int j = 0; j < numCadenas; j++) {
-                    cadenas.add(leerLinea.apply("cadena " + j).trim());
+                    String c = br.readLine().trim();
+                    cadenas.add(c);
+                    System.out.println("cadena " + j + ": [" + c + "]");
                 }
 
-                // Número de imágenes
-                int numImagenes = Integer.parseInt(leerLinea.apply("numImagenes").trim());
+                int numImagenes = Integer.parseInt(br.readLine().trim());
+                System.out.println("numImagenes: [" + numImagenes + "]");
 
-                // Leer imágenes
                 List<ImageIcon> imagenes = new ArrayList<>();
                 for (int k = 0; k < numImagenes; k++) {
-                    String ruta = leerLinea.apply("rutaImagen " + k).trim();
+                    String ruta = br.readLine().trim();
+                    System.out.println("rutaImagen " + k + ": [" + ruta + "]");
                     imagenes.add(new ImageIcon(I18n.class.getResource(ruta)));
                 }
 
-                // Añadir idioma
                 idiomas.add(new Idioma(codigo, cadenas, imagenes));
             }
 
@@ -73,7 +88,6 @@ public class I18n {
             throw new RuntimeException("Error cargando idiomas: " + e.getMessage());
         }
     }
-
 
 
     // Cambiar idioma por código, ej: "es"

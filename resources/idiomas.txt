@@ -1,6 +1,6 @@
-2
+5
 es
-16
+28
 Aplicación de Departamentos
 Alta
 Baja
@@ -17,11 +17,23 @@ Operaciones
 Idioma
 Español
 Inglés
+Francés
+Italiano
+Alemán
+ID
+Nombre
+Localidad
+Alta Departamento
+Modificar Departamento
+Eliminar Departamento
+Listado Departamentos
+Buscar
+Eliminar
 2
 /img/banderaEs.png
 /img/imagenEs.png
 en
-16
+28
 Departments Application
 Create
 Delete
@@ -38,6 +50,117 @@ Operations
 Language
 Spanish
 English
+French
+Italian
+German
+ID
+Name
+City
+Add Department
+Modify Department
+Delete Department
+List Departments
+Search
+Delete
 2
 /img/banderaEn.png
 /img/imagenEn.png
+de
+28
+Abteilungsanwendung
+Erstellen
+Löschen
+Suchen
+Bearbeiten
+Akzeptieren
+Abbrechen
+Fehler
+Abteilung nicht gefunden
+Vorgang abgeschlossen
+Datei
+Beenden
+Operationen
+Sprache
+Spanisch
+Englisch
+Französisch
+Italienisch
+Deutsch
+ID
+Name
+Stadt
+Abteilung hinzufügen
+Abteilung bearbeiten
+Abteilung löschen
+Abteilungsliste
+Suchen
+Löschen
+2
+/img/banderaDe.png
+/img/imagenDe.png
+fr
+28
+Application des Départements
+Ajouter
+Supprimer
+Rechercher
+Modifier
+Accepter
+Annuler
+Erreur
+Département introuvable
+Opération terminée
+Fichier
+Quitter
+Opérations
+Langue
+Espagnol
+Anglais
+Français
+Italien
+Allemand
+ID
+Nom
+Ville
+Ajouter Département
+Modifier Département
+Supprimer Département
+Liste des Départements
+Rechércher
+Supprimer
+2
+/img/banderaFr.png
+/img/imagenFr.png
+it
+28
+Applicazione dei Dipartimenti
+Crea
+Elimina
+Cerca
+Modifica
+Accetta
+Annulla
+Errore
+Dipartimento non trovato
+Operazione completata
+File
+Esci
+Operazioni
+Lingua
+Spagnolo
+Inglese
+Francese
+Italiano
+Tedesco
+ID
+Nome
+Città
+Aggiungi Dipartimento
+Modifica Dipartimento
+Elimina Dipartimento
+Elenco Dipartimenti
+Cerca
+Elimina
+2
+/img/banderaIt.png
+/img/imagenIt.png

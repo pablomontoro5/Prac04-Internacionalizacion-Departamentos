@@ -1,6 +1,6 @@
 2
 es
-10
+16
 Aplicación de Departamentos
 Alta
 Baja
@@ -11,11 +11,17 @@ Cancelar
 Error
 Departamento no encontrado
 Operación completada
+Archivo
+Salir
+Operaciones
+Idioma
+Español
+Inglés
 2
-./img/banderaEs.png
-./img/imagenEs.png
+/img/banderaEs.png
+/img/imagenEs.png
 en
-10
+16
 Departments Application
 Create
 Delete
@@ -26,6 +32,12 @@ Cancel
 Error
 Department not found
 Operation completed
+File
+Exit
+Operations
+Language
+Spanish
+English
 2
-./img/banderaEn.png
-./img/imagenEn.png
+/img/banderaEn.png
+/img/imagenEn.png

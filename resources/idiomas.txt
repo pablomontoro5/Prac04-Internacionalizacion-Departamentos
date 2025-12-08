@@ -1,0 +1,31 @@
+2
+es
+10
+Aplicación de Departamentos
+Alta
+Baja
+Consulta
+Modificación
+Aceptar
+Cancelar
+Error
+Departamento no encontrado
+Operación completada
+2
+./img/banderaEs.png
+./img/imagenEs.png
+en
+10
+Departments Application
+Create
+Delete
+Search
+Update
+Accept
+Cancel
+Error
+Department not found
+Operation completed
+2
+./img/banderaEn.png
+./img/imagenEn.png

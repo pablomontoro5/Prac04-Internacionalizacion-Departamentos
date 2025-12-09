@@ -1,27 +1,22 @@
-# === PROYECTO DEPARTAMENTOS (ARCHIVOS GENERADOS) ===
+# === Project Generated Files ===
 departamentos.tsv
 departamentos_backup.tsv
 id.txt
 app.log
 
-# === LOGS ===
+# === Log files ===
 *.log
+
+# === Build output ===
+out/
+
+# === IntelliJ / CLion ===
+.idea/workspace.xml
+.idea/shelf/
+.idea/tasks.xml
+.idea/dictionaries/
+.idea/usage.statistics.xml
+*.iml
 
 # === Windows ===
 Thumbs.db
-
-# === IntelliJ (extra) ===
-.idea/shelf/
-.idea/tasks.xml
-.idea/usage.statistics.xml
-.idea/dictionaries/
-.idea/httpRequests/
-.idea/artifacts/
-.idea/compiler.xml
-*.iml
-
-# === Maven ===
-target/
-
-# === Java ===
-*.class

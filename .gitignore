@@ -1,31 +1,27 @@
-### IntelliJ IDEA ###
-out/
-!**/src/main/**/out/
-!**/src/test/**/out/
-.kotlin
+# === PROYECTO DEPARTAMENTOS (ARCHIVOS GENERADOS) ===
+departamentos.tsv
+departamentos_backup.tsv
+id.txt
+app.log
 
-### Eclipse ###
-.apt_generated
-.classpath
-.factorypath
-.project
-.settings
-.springBeans
-.sts4-cache
-bin/
-!**/src/main/**/bin/
-!**/src/test/**/bin/
+# === LOGS ===
+*.log
 
-### NetBeans ###
-/nbproject/private/
-/nbbuild/
-/dist/
-/nbdist/
-/.nb-gradle/
+# === Windows ===
+Thumbs.db
 
-### VS Code ###
-.vscode/
+# === IntelliJ (extra) ===
+.idea/shelf/
+.idea/tasks.xml
+.idea/usage.statistics.xml
+.idea/dictionaries/
+.idea/httpRequests/
+.idea/artifacts/
+.idea/compiler.xml
+*.iml
 
-### Mac OS ###
-.DS_Store
-/.idea/workspace.xml
+# === Maven ===
+target/
+
+# === Java ===
+*.class

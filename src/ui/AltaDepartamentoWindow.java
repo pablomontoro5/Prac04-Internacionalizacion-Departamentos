@@ -56,27 +56,38 @@ public class AltaDepartamentoWindow extends JDialog {
     }
 
     private void onAceptar(ActionEvent e) {
-        String nombre = txtNombre.getText().trim();
-        String localidad = txtLocalidad.getText().trim();
+        String nombre = txtNombre.getText().trim().replaceAll("\\s+", " ");
+        String localidad = txtLocalidad.getText().trim().replaceAll("\\s+", " ");
 
-        if (nombre.isEmpty() || localidad.isEmpty()) {
+        // Validación nombre
+        if (nombre.length() < 2 || !nombre.matches("[A-Za-zÁÉÍÓÚáéíóúÑñ ]+")) {
             JOptionPane.showMessageDialog(this,
-                    I18n.t(7),      // “Error”
+                    I18n.t(7),  // Error
                     I18n.t(7),
                     JOptionPane.ERROR_MESSAGE);
             return;
         }
 
-        // Modelo
+        // Validación localidad
+        if (localidad.isEmpty() || !localidad.matches("[A-Za-zÁÉÍÓÚáéíóúÑñ ]+")) {
+            JOptionPane.showMessageDialog(this,
+                    I18n.t(7),
+                    I18n.t(7),
+                    JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        // Crear departamento
         Departamento d = new Departamento(nombre, localidad);
-        Data.addDepartamento(d);   // Guardar en memoria
+        Data.addDepartamento(d);
 
         JOptionPane.showMessageDialog(this,
-                I18n.t(9),   // “Operación completada”
+                I18n.t(9),
                 I18n.t(0),
                 JOptionPane.INFORMATION_MESSAGE);
 
         dispose();
     }
+
 }
 

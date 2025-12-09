@@ -26,9 +26,9 @@ Localidad
 Alta Departamento
 Modificar Departamento
 Eliminar Departamento
-Listado Departamentos
+Listado de Departamentos
 Buscar
-Eliminar
+Eliminar Seleccionado
 2
 /img/banderaEs.png
 /img/imagenEs.png
@@ -59,9 +59,9 @@ City
 Add Department
 Modify Department
 Delete Department
-List Departments
+Department List
 Search
-Delete
+Delete Selected
 2
 /img/banderaEn.png
 /img/imagenEn.png
@@ -94,7 +94,7 @@ Abteilung bearbeiten
 Abteilung löschen
 Abteilungsliste
 Suchen
-Löschen
+Auswahl löschen
 2
 /img/banderaDe.png
 /img/imagenDe.png
@@ -126,8 +126,8 @@ Ajouter Département
 Modifier Département
 Supprimer Département
 Liste des Départements
-Rechércher
-Supprimer
+Rechercher
+Supprimer Sélection
 2
 /img/banderaFr.png
 /img/imagenFr.png
@@ -160,7 +160,7 @@ Modifica Dipartimento
 Elimina Dipartimento
 Elenco Dipartimenti
 Cerca
-Elimina
+Elimina Selezionato
 2
 /img/banderaIt.png
 /img/imagenIt.png

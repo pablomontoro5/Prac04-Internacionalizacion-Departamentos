@@ -1,96 +1,82 @@
 package i18n;
 
 import javax.swing.*;
-import java.awt.*;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.*;
+import java.util.ArrayList;
 import java.util.List;
 
 public class I18n {
 
-    private static List<Idioma> idiomas = new ArrayList<>();
+    private static final List<Idioma> idiomas = new ArrayList<>();
     private static Idioma idiomaActual;
 
+    // ==============================================
+    // CARGAR ARCHIVO idiomas.txt
+    // ==============================================
     public static void cargarIdiomas() {
-        try {
-            InputStream is = I18n.class.getResourceAsStream("/idiomas.txt");
-            if (is == null) {
-                throw new RuntimeException("No se encontró el archivo idiomas.txt");
-            }
+
+        try (InputStream is = I18n.class.getResourceAsStream("/idiomas.txt")) {
+
+            if (is == null)
+                throw new RuntimeException("❌ No se pudo cargar idiomas.txt desde resources");
 
             BufferedReader br = new BufferedReader(new InputStreamReader(is, "UTF-8"));
-/*
-            // ==========================================================
-            // DEPURACIÓN PROFUNDA: muestra caracteres con sus códigos
-            // ==========================================================
-            System.out.println("=== DEPURANDO LÍNEAS (ASCII) ===");
-            String lineaDebug;
-            int n = 1;
-            while ((lineaDebug = br.readLine()) != null) {
-                System.out.print("Línea " + n + ": ");
-                if (lineaDebug.isEmpty()) {
-                    System.out.print("[VACÍA]");
-                }
-                for (char c : lineaDebug.toCharArray()) {
-                    System.out.print("[" + c + "=" + (int) c + "] ");
-                }
-                System.out.println();
-                n++;
-            }
-            System.out.println("================================");
 
-            // Reabrir para la lectura REAL
-
- */
-            is = I18n.class.getResourceAsStream("/idiomas.txt");
-            br = new BufferedReader(new InputStreamReader(is, "UTF-8"));
-
-            // -----------------------------------------------------------
-            // Empieza la carga normal
-            // -----------------------------------------------------------
-
+            // 1) Número de idiomas
             int numIdiomas = Integer.parseInt(br.readLine().trim());
-            System.out.println("numIdiomas: " + numIdiomas);
+            System.out.println("Cargando " + numIdiomas + " idiomas...");
 
+            // 2) Leer cada idioma
             for (int i = 0; i < numIdiomas; i++) {
+
+                // Código
                 String codigo = br.readLine().trim();
-                System.out.println("codigo: [" + codigo + "]");
 
+                // Cadenas
                 int numCadenas = Integer.parseInt(br.readLine().trim());
-                System.out.println("numCadenas: [" + numCadenas + "]");
-
                 List<String> cadenas = new ArrayList<>();
-                for (int j = 0; j < numCadenas; j++) {
-                    String c = br.readLine().trim();
-                    cadenas.add(c);
-                    System.out.println("cadena " + j + ": [" + c + "]");
-                }
 
-                int numImagenes = Integer.parseInt(br.readLine().trim());
-                System.out.println("numImagenes: [" + numImagenes + "]");
+                for (int j = 0; j < numCadenas; j++)
+                    cadenas.add(br.readLine().trim());
 
-                List<ImageIcon> imagenes = new ArrayList<>();
-                for (int k = 0; k < numImagenes; k++) {
+                // Imágenes
+                int numImgs = Integer.parseInt(br.readLine().trim());
+                List<ImageIcon> imgs = new ArrayList<>();
+
+                for (int k = 0; k < numImgs; k++) {
                     String ruta = br.readLine().trim();
-                    System.out.println("rutaImagen " + k + ": [" + ruta + "]");
-                    imagenes.add(new ImageIcon(I18n.class.getResource(ruta)));
+                    ImageIcon icon = cargarIcono(ruta);
+                    imgs.add(icon);
                 }
 
-                idiomas.add(new Idioma(codigo, cadenas, imagenes));
+                idiomas.add(new Idioma(codigo, cadenas, imgs));
             }
 
-            idiomaActual = idiomas.get(0);
+            idiomaActual = idiomas.get(0); // idioma por defecto
+            System.out.println("Idioma cargado por defecto: " + idiomaActual.getCodigo());
 
         } catch (Exception e) {
-            e.printStackTrace();
-            throw new RuntimeException("Error cargando idiomas: " + e.getMessage());
+            throw new RuntimeException("❌ Error cargando idiomas: " + e.getMessage(), e);
         }
     }
 
+    // ==============================================
+    // UTILIDAD: Cargar icono con comprobación
+    // ==============================================
+    private static ImageIcon cargarIcono(String ruta) {
+        try {
+            return new ImageIcon(I18n.class.getResource(ruta));
+        } catch (Exception e) {
+            System.err.println("⚠ No se pudo cargar la imagen: " + ruta);
+            return null;
+        }
+    }
 
-    // Cambiar idioma por código, ej: "es"
+    // ==============================================
+    // CAMBIO DE IDIOMA
+    // ==============================================
     public static void setIdioma(String codigo) {
         for (Idioma id : idiomas) {
             if (id.getCodigo().equalsIgnoreCase(codigo)) {
@@ -101,26 +87,61 @@ public class I18n {
         throw new RuntimeException("Idioma no encontrado: " + codigo);
     }
 
-    // Obtener una cadena por índice
+    // ==============================================
+    // OBTENER CADENA
+    // ==============================================
     public static String t(int index) {
         return idiomaActual.getCadena(index);
     }
 
-    // Obtener una imagen por índice
+    // OBTENER IMAGEN
     public static ImageIcon img(int index) {
         return idiomaActual.getImagen(index);
     }
 
-    // Obtener lista de códigos de idioma (para menú)
-    public static List<String> getCodigos() {
-        List<String> codigos = new ArrayList<>();
+    // Obtener bandera de un idioma
+    public static ImageIcon getImagenIdioma(String codigo) {
         for (Idioma id : idiomas) {
-            codigos.add(id.getCodigo());
+            if (id.getCodigo().equals(codigo))
+                return id.getImagen(0);
         }
-        return codigos;
+        return null;
+    }
+
+    public static ImageIcon getImagen(int index) {
+        return idiomaActual.getImagen(index);
     }
 
     public static String getIdiomaActual() {
         return idiomaActual.getCodigo();
     }
+
+    public static List<String> getCodigos() {
+        List<String> lista = new ArrayList<>();
+        for (Idioma id : idiomas)
+            lista.add(id.getCodigo());
+        return lista;
+    }
+    public static String t(Textos t) {
+        return idiomaActual.getCadena(t.index);
+    }
+
+    public static void autoDetect() {
+        String sys = System.getProperty("user.language");
+
+        for (Idioma id : idiomas) {
+            if (id.getCodigo().equalsIgnoreCase(sys)) {
+                idiomaActual = id;
+                return;
+            }
+        }
+
+        // fallback español
+        idiomaActual = idiomas.get(0);
+    }
+    public static List<Idioma> getIdiomasList() { return idiomas; }
+
+
+
+
 }

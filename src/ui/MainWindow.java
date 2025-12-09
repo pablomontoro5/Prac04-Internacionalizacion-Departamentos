@@ -23,6 +23,7 @@ public class MainWindow extends JFrame {
 
 
         setTitle(I18n.t(0));
+        setIconImage(new ImageIcon(getClass().getResource("/img/logo.png")).getImage());
         setSize(900, 550);
         setMinimumSize(new Dimension(750, 480));
         setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -63,6 +64,17 @@ public class MainWindow extends JFrame {
         panelTextos.add(subtitulo);
 
         header.add(panelTextos, BorderLayout.WEST);
+        // ---- Añadir logo al header ----
+        try {
+            ImageIcon iconLogo = new ImageIcon(getClass().getResource("/img/logo.png"));
+            Image logoEscalado = iconLogo.getImage().getScaledInstance(45, 45, Image.SCALE_SMOOTH);
+            JLabel lblLogo = new JLabel(new ImageIcon(logoEscalado));
+            lblLogo.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 20)); // margen derecha
+            header.add(lblLogo, BorderLayout.EAST);
+        } catch (Exception e) {
+            System.err.println("No se pudo cargar logo: " + e.getMessage());
+        }
+
 
         add(header, BorderLayout.NORTH);
     }

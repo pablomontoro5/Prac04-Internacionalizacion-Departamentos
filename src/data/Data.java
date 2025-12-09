@@ -111,4 +111,43 @@ public class Data {
     public static void update() {
         save();
     }
+    public static List<Departamento> getLista() {
+        return lista;  // el nombre REAL de tu lista en Data.java
+    }
+    // =====================================================
+    //  BUSCAR DEPARTAMENTO POR ID
+    // =====================================================
+    public static Departamento buscarPorId(int id) {
+        for (Departamento d : lista) {
+            if (d.getId() == id) return d;
+        }
+        return null;
+    }
+
+    // =====================================================
+    //  ELIMINAR DEPARTAMENTO Y REORDENAR IDS
+    // =====================================================
+    public static void eliminarDepartamento(int id) {
+
+        lista.removeIf(d -> d.getId() == id);
+
+        // Reordenar IDs
+        int nuevoId = 1;
+        for (Departamento d : lista) {
+            d.setId(nuevoId++);
+        }
+
+        // Guardar en archivo
+        DataStorage.save(lista);
+
+        // Actualizar último ID
+        DataStorage.saveLastId(lista.size());
+    }
+
+    public static int loadLastId() {
+        return DataStorage.loadLastId();
+    }
+
+
+
 }

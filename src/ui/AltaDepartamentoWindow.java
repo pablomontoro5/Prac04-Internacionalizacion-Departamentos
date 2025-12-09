@@ -86,8 +86,16 @@ public class AltaDepartamentoWindow extends JDialog {
                 I18n.t(0),
                 JOptionPane.INFORMATION_MESSAGE);
 
+        //  Refrescar listado si está abierto
+        if (getOwner() instanceof MainWindow main) {
+            if (main.ventanaListado != null) {
+                main.ventanaListado.refrescarTabla();
+            }
+        }
+
         dispose();
     }
+
 
 }
 

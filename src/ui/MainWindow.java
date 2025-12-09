@@ -10,7 +10,7 @@ import util.IconManager;
 public class MainWindow extends JFrame {
 
     private JLabel lblImagen;
-
+    public ListadoDepartamentoWindow ventanaListado;
     public MainWindow() {
         /*System.out.println("ADD = " + IconManager.ADD);
         System.out.println("DELETE = " + IconManager.DELETE);
@@ -116,13 +116,44 @@ public class MainWindow extends JFrame {
         menuArchivo.add(itemSalir);
 
         // ---- Operaciones ----
+        // ---- Operaciones ----
         JMenu menuOperaciones = new JMenu(I18n.t(Textos.OPERACIONES));
 
-        menuOperaciones.add(crearMenuItemOper(() -> new AltaDepartamentoWindow(this).setVisible(true), Textos.ALTA, IconManager.ADD));
-        menuOperaciones.add(crearMenuItemOper(() -> new BajaDepartamentoWindow(this).setVisible(true), Textos.BAJA, IconManager.DELETE));
-        menuOperaciones.add(crearMenuItemOper(() -> new ConsultaDepartamentoWindow(this).setVisible(true), Textos.CONSULTA, IconManager.SEARCH));
-        menuOperaciones.add(crearMenuItemOper(() -> new ModificarDepartamentoWindow(this).setVisible(true), Textos.MODIFICACION, IconManager.EDIT));
-        menuOperaciones.add(crearMenuItemOper(() -> new ListadoDepartamentoWindow(this).setVisible(true), Textos.LISTADO, IconManager.LIST));
+        menuOperaciones.add(crearMenuItemOper(
+                () -> new AltaDepartamentoWindow(this).setVisible(true),
+                Textos.ALTA, IconManager.ADD));
+
+        menuOperaciones.add(crearMenuItemOper(
+                () -> new BajaDepartamentoWindow(this).setVisible(true),
+                Textos.BAJA, IconManager.DELETE));
+
+        menuOperaciones.add(crearMenuItemOper(
+                () -> new ConsultaDepartamentoWindow(this).setVisible(true),
+                Textos.CONSULTA, IconManager.SEARCH));
+
+        //  Opción Modificación que abre primero el listado y luego modificar
+        menuOperaciones.add(crearMenuItemOper(() -> {
+
+            // Abrir listado si no está abierto
+            if (ventanaListado == null || !ventanaListado.isVisible()) {
+                ventanaListado = new ListadoDepartamentoWindow(this);
+            }
+
+            ventanaListado.setVisible(true);
+
+            // Abrir Modificar pasando SIEMPRE LA MISMA ventanaListado
+            new ModificarDepartamentoWindow(ventanaListado).setVisible(true);
+
+        }, Textos.MODIFICACION, IconManager.EDIT));
+        // Opción Listado
+        menuOperaciones.add(crearMenuItemOper(() -> {
+            if (ventanaListado == null || !ventanaListado.isVisible()) {
+                ventanaListado = new ListadoDepartamentoWindow(this);
+            }
+            ventanaListado.setVisible(true);
+        }, Textos.LISTADO, IconManager.LIST));
+
+
 
         // ---- Idioma ----
         JMenu menuIdioma = new JMenu(I18n.t(13));

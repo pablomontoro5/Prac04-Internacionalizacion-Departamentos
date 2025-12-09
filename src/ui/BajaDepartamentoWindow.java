@@ -51,7 +51,7 @@ public class BajaDepartamentoWindow extends JDialog {
         btnEliminar.setEnabled(false);
 
         btnBuscar.addActionListener(e -> buscar());
-        btnEliminar.addActionListener(e -> eliminar());
+        btnEliminar.addActionListener(e -> onEliminar());
         btnCancelar.addActionListener(e -> dispose());
 
         panelBotones.add(btnBuscar);
@@ -100,17 +100,52 @@ public class BajaDepartamentoWindow extends JDialog {
                 JOptionPane.ERROR_MESSAGE);
     }
 
-    private void eliminar() {
-        if (deptoEncontrado == null)
-            return;
+    private void onEliminar() {
+        String idTexto = txtId.getText().trim();
 
-        Data.getDepartamentos().remove(deptoEncontrado);
+        if (idTexto.isEmpty() || !idTexto.matches("\\d+")) {
+            JOptionPane.showMessageDialog(this,
+                    I18n.t(7),  // Error
+                    I18n.t(7),
+                    JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        int id = Integer.parseInt(idTexto);
+
+        Departamento d = Data.buscarPorId(id);
+
+        if (d == null) {
+            JOptionPane.showMessageDialog(this,
+                    I18n.t(8),  // Departamento no encontrado
+                    I18n.t(7),  // Error
+                    JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        // Confirmación
+        int opcion = JOptionPane.showConfirmDialog(
+                this,
+                "¿Eliminar departamento?",
+                "Confirmar",
+                JOptionPane.YES_NO_OPTION);
+
+        if (opcion != JOptionPane.YES_OPTION) return;
+
+        // Eliminar
+        Data.eliminarDepartamento(d.getId());
 
         JOptionPane.showMessageDialog(this,
-                I18n.t(9),
+                I18n.t(9),   // Operación completada
                 I18n.t(0),
                 JOptionPane.INFORMATION_MESSAGE);
 
+        // 🔥 REFRESCAR LISTADO SI ESTÁ ABIERTO
+        if (getOwner() instanceof MainWindow main && main.ventanaListado != null) {
+            main.ventanaListado.refrescarTabla();
+        }
+
         dispose();
     }
+
 }

@@ -3,6 +3,7 @@ package data;
 import model.Departamento;
 
 import java.io.*;
+import java.util.Comparator;
 import java.util.List;
 
 public class DataStorage {
@@ -14,6 +15,10 @@ public class DataStorage {
     // GUARDAR TODOS LOS DEPARTAMENTOS EN TSV
     // ----------------------------------------------------
     public static void save(List<Departamento> lista) {
+
+        // Ordenar antes de guardar
+        lista.sort(Comparator.comparingInt(Departamento::getId));
+
         try (PrintWriter pw = new PrintWriter(new FileWriter(FILE))) {
 
             for (Departamento d : lista) {
@@ -24,6 +29,7 @@ public class DataStorage {
             e.printStackTrace();
         }
     }
+
 
     // ----------------------------------------------------
     // CARGAR DESDE TSV
@@ -95,4 +101,14 @@ public class DataStorage {
             e.printStackTrace();
         }
     }
+    // ----------------------------------------------------
+// BUSCAR DEPARTAMENTO POR ID
+// ----------------------------------------------------
+    public static Departamento buscarDepartamento(int id, List<Departamento> lista) {
+        for (Departamento d : lista) {
+            if (d.getId() == id) return d;
+        }
+        return null;
+    }
+
 }

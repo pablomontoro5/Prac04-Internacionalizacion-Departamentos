@@ -3,8 +3,12 @@ package ui;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.util.Comparator;
+
+import data.DataStorage;
 import i18n.I18n;
 import data.Data;
+import i18n.Textos;
 import model.Departamento;
 
 public class ListadoDepartamentoWindow extends JDialog {
@@ -47,7 +51,7 @@ public class ListadoDepartamentoWindow extends JDialog {
 
 
     public ListadoDepartamentoWindow(JFrame parent) {
-        super(parent, I18n.t(0) + " - " + I18n.t(25), true);
+        super(parent, I18n.t(0) + " - " + I18n.t(Textos.LISTADO), true);
         setSize(500, 350);
         setLocationRelativeTo(parent);
         setLayout(new BorderLayout());
@@ -100,4 +104,21 @@ public class ListadoDepartamentoWindow extends JDialog {
             });
         }
     }
+
+    public void refrescarTabla() {
+        DefaultTableModel model = (DefaultTableModel) tabla.getModel();
+        model.setRowCount(0);
+
+        for (Departamento d : Data.getLista()) {
+            model.addRow(new Object[]{
+                    d.getId(),
+                    d.getNombre(),
+                    d.getLocalidad()
+            });
+        }
+    }
+
+
+
+
 }

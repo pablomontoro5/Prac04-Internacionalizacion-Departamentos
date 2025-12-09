@@ -1,5 +1,6 @@
 package model;
 
+import data.Data;
 import data.IdStorage;
 
 public class Departamento {
@@ -11,7 +12,7 @@ public class Departamento {
     private String localidad;
 
     public Departamento(String nombre, String localidad) {
-        this.id = contador++;  // ID autoincremental manejado en memoria
+        this.id = Data.loadLastId() +1;  // ID autoincremental manejado en memoria
         this.nombre = nombre;
         this.localidad = localidad;
 

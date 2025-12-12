@@ -19,15 +19,15 @@ public class ListadoDepartamentoWindow extends JDialog {
     private void mostrarPopupAcciones(int id) {
 
         String[] opciones = {
-                I18n.t(3),  // Consulta
-                I18n.t(4),  // Modificación
-                I18n.t(6)   // Cancelar
+                I18n.t(Textos.CONSULTA),  // Consulta
+                I18n.t(Textos.MODIFICACION),  // Modificación
+                I18n.t(Textos.CANCELAR)   // Cancelar
         };
 
         int seleccion = JOptionPane.showOptionDialog(
                 this,
-                I18n.t(25) + " (ID: " + id + ")",
-                I18n.t(25),
+                I18n.t(Textos.LISTADO) + " (ID: " + id + ")",
+                I18n.t(Textos.LISTADO),
                 JOptionPane.DEFAULT_OPTION,
                 JOptionPane.PLAIN_MESSAGE,
                 null,
@@ -51,15 +51,15 @@ public class ListadoDepartamentoWindow extends JDialog {
 
 
     public ListadoDepartamentoWindow(JFrame parent) {
-        super(parent, I18n.t(0) + " - " + I18n.t(Textos.LISTADO), true);
+        super(parent, I18n.t(Textos.LISTADO) + " - " + I18n.t(Textos.LISTADO), true);
         setSize(500, 350);
         setLocationRelativeTo(parent);
         setLayout(new BorderLayout());
 
         modelo = new DefaultTableModel();
-        modelo.addColumn(I18n.t(19)); // ID
-        modelo.addColumn(I18n.t(20)); // Nombre
-        modelo.addColumn(I18n.t(21)); // Localidad
+        modelo.addColumn(I18n.t(Textos.ID)); // ID
+        modelo.addColumn(I18n.t(Textos.NOMBRE)); // Nombre
+        modelo.addColumn(I18n.t(Textos.LOCALIDAD)); // Localidad
 
         tabla = new JTable(modelo);
         tabla.setDefaultEditor(Object.class, null); // no editable pero sí clicable
@@ -83,7 +83,7 @@ public class ListadoDepartamentoWindow extends JDialog {
 
         add(new JScrollPane(tabla), BorderLayout.CENTER);
 
-        JButton btnCerrar = new JButton(I18n.t(6));
+        JButton btnCerrar = new JButton(I18n.t(Textos.CANCELAR));
         btnCerrar.addActionListener(e -> dispose());
 
         JPanel panelBoton = new JPanel();

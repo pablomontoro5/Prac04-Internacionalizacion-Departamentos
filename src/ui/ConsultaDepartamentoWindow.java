@@ -4,6 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 import i18n.I18n;
 import data.Data;
+import i18n.Textos;
 import model.Departamento;
 
 public class ConsultaDepartamentoWindow extends JDialog {
@@ -13,7 +14,7 @@ public class ConsultaDepartamentoWindow extends JDialog {
     private JTextField txtLocalidad;
 
     public ConsultaDepartamentoWindow(JFrame parent) {
-        super(parent, I18n.t(23), true); // Consulta Departamento
+        super(parent, I18n.t(Textos.CONSULTA), true); // Consulta Departamento
         setSize(420, 250);
         setLocationRelativeTo(parent);
         setLayout(new BorderLayout());
@@ -21,9 +22,9 @@ public class ConsultaDepartamentoWindow extends JDialog {
         JPanel panelCampos = new JPanel(new GridLayout(3, 2, 10, 10));
         panelCampos.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-        JLabel lblId = new JLabel(I18n.t(19));        // ID
-        JLabel lblNombre = new JLabel(I18n.t(20));    // Nombre
-        JLabel lblLocalidad = new JLabel(I18n.t(21)); // Localidad
+        JLabel lblId = new JLabel(I18n.t(Textos.ID));        // ID
+        JLabel lblNombre = new JLabel(I18n.t(Textos.NOMBRE));    // Nombre
+        JLabel lblLocalidad = new JLabel(I18n.t(Textos.LOCALIDAD)); // Localidad
 
         txtId = new JTextField();
         txtNombre = new JTextField();
@@ -40,8 +41,8 @@ public class ConsultaDepartamentoWindow extends JDialog {
         panelCampos.add(txtLocalidad);
 
         JPanel panelBotones = new JPanel();
-        JButton btnAceptar = new JButton(I18n.t(26));  // Buscar
-        JButton btnCancelar = new JButton(I18n.t(6)); // Cancelar
+        JButton btnAceptar = new JButton(I18n.t(Textos.BUSCAR));  // Buscar
+        JButton btnCancelar = new JButton(I18n.t(Textos.CANCELAR)); // Cancelar
 
         btnAceptar.addActionListener(e -> consultar());
         btnCancelar.addActionListener(e -> dispose());
@@ -86,7 +87,7 @@ public class ConsultaDepartamentoWindow extends JDialog {
 
         // No encontrado
         JOptionPane.showMessageDialog(this,
-                I18n.t(8), // Departamento no encontrado
+                I18n.t(Textos.NO_ENCONTRADO), // Departamento no encontrado
                 I18n.t(7),
                 JOptionPane.ERROR_MESSAGE);
     }

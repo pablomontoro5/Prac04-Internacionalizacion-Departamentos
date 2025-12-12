@@ -4,6 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import i18n.I18n;
+import i18n.Textos;
 import model.Departamento;
 import data.Data;
 
@@ -13,7 +14,7 @@ public class AltaDepartamentoWindow extends JDialog {
     private JTextField txtLocalidad;
 
     public AltaDepartamentoWindow(Frame owner) {
-        super(owner, I18n.t(22), true);   // “Alta Departamento”
+        super(owner, I18n.t(Textos.ALTA_DEP), true);   // “Alta Departamento”
         setSize(400, 250);
         setLocationRelativeTo(owner);
         setLayout(new GridBagLayout());
@@ -24,7 +25,7 @@ public class AltaDepartamentoWindow extends JDialog {
 
         // ---- Nombre ----
         c.gridx = 0; c.gridy = 0;
-        add(new JLabel(I18n.t(20) + ":"), c);
+        add(new JLabel(I18n.t(Textos.NOMBRE) + ":"), c);
 
         txtNombre = new JTextField();
         c.gridx = 1;
@@ -32,7 +33,7 @@ public class AltaDepartamentoWindow extends JDialog {
 
         // ---- Localidad ----
         c.gridx = 0; c.gridy = 1;
-        add(new JLabel(I18n.t(21) + ":"), c);
+        add(new JLabel(I18n.t(Textos.LOCALIDAD) + ":"), c);
 
         txtLocalidad = new JTextField();
         c.gridx = 1;
@@ -40,8 +41,8 @@ public class AltaDepartamentoWindow extends JDialog {
 
         // ---- Botones ----
         JPanel panelBotones = new JPanel();
-        JButton btnAceptar = new JButton(I18n.t(5));   // Aceptar
-        JButton btnCancelar = new JButton(I18n.t(6));  // Cancelar
+        JButton btnAceptar = new JButton(I18n.t(Textos.ACEPTAR));   // Aceptar
+        JButton btnCancelar = new JButton(I18n.t(Textos.CANCELAR));  // Cancelar
 
         btnAceptar.addActionListener(this::onAceptar);
         btnCancelar.addActionListener(e -> dispose());
@@ -77,6 +78,22 @@ public class AltaDepartamentoWindow extends JDialog {
             return;
         }
 
+        //  NUEVO: comprobar si ya existe un departamento con mismo nombre + localidad
+        boolean existeDuplicado = Data.getLista().stream().anyMatch(dep ->
+                dep.getNombre().equalsIgnoreCase(nombre) &&
+                        dep.getLocalidad().equalsIgnoreCase(localidad)
+        );
+
+        if (existeDuplicado) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Ya existe un departamento con ese nombre y localidad.",
+                    "Departamento duplicado",
+                    JOptionPane.ERROR_MESSAGE
+            );
+            return;
+        }
+
         // Crear departamento
         Departamento d = new Departamento(nombre, localidad);
         Data.addDepartamento(d);
@@ -95,6 +112,7 @@ public class AltaDepartamentoWindow extends JDialog {
 
         dispose();
     }
+
 
 
 }

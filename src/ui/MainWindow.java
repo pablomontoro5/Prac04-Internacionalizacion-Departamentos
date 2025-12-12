@@ -110,12 +110,6 @@ public class MainWindow extends JFrame {
         JMenuBar menuBar = new JMenuBar();
         menuBar.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 
-        // ---- Archivo ----
-        JMenu menuArchivo = new JMenu(I18n.t(10));
-        JMenuItem itemSalir = crearMenuItemOper(() -> System.exit(0), Textos.SALIR, IconManager.DELETE);
-        menuArchivo.add(itemSalir);
-
-        // ---- Operaciones ----
         // ---- Operaciones ----
         JMenu menuOperaciones = new JMenu(I18n.t(Textos.OPERACIONES));
 
@@ -131,7 +125,7 @@ public class MainWindow extends JFrame {
                 () -> new ConsultaDepartamentoWindow(this).setVisible(true),
                 Textos.CONSULTA, IconManager.SEARCH));
 
-        //  Opción Modificación que abre primero el listado y luego modificar
+        // Opción Modificación que abre primero el listado y luego modificar
         menuOperaciones.add(crearMenuItemOper(() -> {
 
             // Abrir listado si no está abierto
@@ -145,6 +139,7 @@ public class MainWindow extends JFrame {
             new ModificarDepartamentoWindow(ventanaListado).setVisible(true);
 
         }, Textos.MODIFICACION, IconManager.EDIT));
+
         // Opción Listado
         menuOperaciones.add(crearMenuItemOper(() -> {
             if (ventanaListado == null || !ventanaListado.isVisible()) {
@@ -154,23 +149,21 @@ public class MainWindow extends JFrame {
         }, Textos.LISTADO, IconManager.LIST));
 
 
-
         // ---- Idioma ----
-        JMenu menuIdioma = new JMenu(I18n.t(13));
-        menuIdioma.add(crearItemIdioma("es", 14));
-        menuIdioma.add(crearItemIdioma("en", 15));
-        menuIdioma.add(crearItemIdioma("fr", 16));
-        menuIdioma.add(crearItemIdioma("it", 17));
-        menuIdioma.add(crearItemIdioma("de", 18));
+        JMenu menuIdioma = new JMenu(I18n.t(Textos.IDIOMA));
+        menuIdioma.add(crearItemIdioma("es", Textos.ESPAÑOL.index));
+        menuIdioma.add(crearItemIdioma("en", Textos.INGLES.index));
+        menuIdioma.add(crearItemIdioma("fr", Textos.FRANCES.index));
+        menuIdioma.add(crearItemIdioma("it", Textos.ITALIANO.index));
+        menuIdioma.add(crearItemIdioma("de", Textos.ALEMAN.index));
+        menuIdioma.add(crearItemIdioma("pl", Textos.POLACO.index));
 
         // ---- Tema Claro/Oscuro ----
         JMenu menuTema = new JMenu("Tema");
 
-        // Tema claro
         JMenuItem itemClaro = new JMenuItem("Claro", IconManager.SUN);
         itemClaro.addActionListener(e -> setTheme(false));
 
-        // Tema oscuro
         JMenuItem itemOscuro = new JMenuItem("Oscuro", IconManager.MOON);
         itemOscuro.addActionListener(e -> setTheme(true));
 
@@ -189,18 +182,27 @@ public class MainWindow extends JFrame {
         );
 
         menuAyuda.add(itemAcerca);
-        menuBar.add(menuAyuda);
 
-        menuTema.add(itemClaro);
-        menuTema.add(itemOscuro);
+        // ---- Salida ----
+        // Usa aquí el texto que quieras: Textos.SALIR o Textos.SALIDA según tu enum
+        JMenu menuSalida = new JMenu(I18n.t(Textos.SALIDA));  // o Textos.SALIR si así lo tienes
+        JMenuItem itemSalir = crearMenuItemOper(
+                () -> System.exit(0),
+                Textos.SALIR,          // este es el texto del ítem, tipo "Salir"
+                IconManager.DELETE
+        );
+        menuSalida.add(itemSalir);
 
-        menuBar.add(menuArchivo);
+        // ---- Añadir menús a la barra en el ORDEN correcto ----
         menuBar.add(menuOperaciones);
         menuBar.add(menuIdioma);
         menuBar.add(menuTema);
+        menuBar.add(menuAyuda);
+        menuBar.add(menuSalida);   // último
 
         setJMenuBar(menuBar);
     }
+
 
     // =========================================================
     // ITEMS DEL MENÚ (con icono escalado y bugfix)

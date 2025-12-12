@@ -24,43 +24,46 @@ public class I18n {
 
             BufferedReader br = new BufferedReader(new InputStreamReader(is, "UTF-8"));
 
-            // 1) Número de idiomas
-            int numIdiomas = Integer.parseInt(br.readLine().trim());
-            System.out.println("Cargando " + numIdiomas + " idiomas...");
+            idiomas.clear();
 
-            // 2) Leer cada idioma
-            for (int i = 0; i < numIdiomas; i++) {
+            String codigo;
+            while ((codigo = br.readLine()) != null) {
 
-                // Código
-                String codigo = br.readLine().trim();
+                codigo = codigo.trim();
+                if (codigo.isEmpty()) continue;   // por si hay líneas en blanco
 
-                // Cadenas
+                // nº cadenas
                 int numCadenas = Integer.parseInt(br.readLine().trim());
                 List<String> cadenas = new ArrayList<>();
 
-                for (int j = 0; j < numCadenas; j++)
+                for (int j = 0; j < numCadenas; j++) {
                     cadenas.add(br.readLine().trim());
+                }
 
-                // Imágenes
+                // nº imágenes
                 int numImgs = Integer.parseInt(br.readLine().trim());
                 List<ImageIcon> imgs = new ArrayList<>();
 
                 for (int k = 0; k < numImgs; k++) {
                     String ruta = br.readLine().trim();
-                    ImageIcon icon = cargarIcono(ruta);
-                    imgs.add(icon);
+                    imgs.add(cargarIcono(ruta));
                 }
 
                 idiomas.add(new Idioma(codigo, cadenas, imgs));
             }
 
+            if (idiomas.isEmpty())
+                throw new RuntimeException("No se ha cargado ningún idioma");
+
             idiomaActual = idiomas.get(0); // idioma por defecto
+            System.out.println("Cargados " + idiomas.size() + " idiomas.");
             System.out.println("Idioma cargado por defecto: " + idiomaActual.getCodigo());
 
         } catch (Exception e) {
-            throw new RuntimeException("❌ Error cargando idiomas: " + e.getMessage(), e);
+            throw new RuntimeException("Error cargando idiomas: " + e.getMessage(), e);
         }
     }
+
 
     // ==============================================
     // UTILIDAD: Cargar icono con comprobación

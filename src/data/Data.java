@@ -129,25 +129,30 @@ public class Data {
     // =====================================================
     public static void eliminarDepartamento(int id) {
 
+        // 1. Eliminar el departamento con ese id
         lista.removeIf(d -> d.getId() == id);
 
-        // Reordenar IDs
-        int nuevoId = 1;
-        for (Departamento d : lista) {
-            d.setId(nuevoId++);
-        }
-
-        // Guardar en archivo
+        // 2. Guardar la lista tal cual (sin tocar los demás IDs)
         DataStorage.save(lista);
 
-        // Actualizar último ID
-        DataStorage.saveLastId(lista.size());
+        // 3. (Opcional pero recomendable) actualizar último ID al máximo id existente
+        DataStorage.saveLastIdFromList(lista);
     }
+
 
     public static int loadLastId() {
-        return DataStorage.loadLastId();
+        return IdStorage.loadLastId();
     }
 
+    public static boolean existeDepartamento(String nombre, String localidad) {
+        for (Departamento d : lista) {
+            if (d.getNombre().equalsIgnoreCase(nombre)
+                    && d.getLocalidad().equalsIgnoreCase(localidad)) {
+                return true;
+            }
+        }
+        return false;
+    }
 
 
 }

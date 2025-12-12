@@ -14,9 +14,12 @@ public class BajaDepartamentoWindow extends JDialog {
 
     private Departamento deptoEncontrado = null;
     private JButton btnEliminar;
+    private ListadoDepartamentoWindow listado;
 
     public BajaDepartamentoWindow(JFrame parent) {
         super(parent, I18n.t(0) + " - " + I18n.t(24), true); // Título consistente
+        this.listado = listado;
+
         setSize(420, 260);
         setLocationRelativeTo(parent);
         setLayout(new BorderLayout());
@@ -140,12 +143,13 @@ public class BajaDepartamentoWindow extends JDialog {
                 I18n.t(0),
                 JOptionPane.INFORMATION_MESSAGE);
 
-        // 🔥 REFRESCAR LISTADO SI ESTÁ ABIERTO
+        // REFRESCAR LISTADO SI ESTÁ ABIERTO
         if (getOwner() instanceof MainWindow main && main.ventanaListado != null) {
             main.ventanaListado.refrescarTabla();
         }
 
         dispose();
     }
+
 
 }

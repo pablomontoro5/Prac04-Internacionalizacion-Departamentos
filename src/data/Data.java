@@ -99,10 +99,10 @@ public class Data {
         save();
     }
 
-    public static void removeDepartamento(Departamento d) {
-        lista.remove(d);
-        save();
+    public static boolean removeDepartamento(int id) {
+        return lista.removeIf(d -> d.getId() == id);
     }
+
 
     public static List<Departamento> getDepartamentos() {
         return lista;

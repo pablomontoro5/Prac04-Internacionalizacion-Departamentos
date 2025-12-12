@@ -4,6 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import i18n.I18n;
+import i18n.Textos;
 import model.Departamento;
 import data.Data;
 
@@ -11,9 +12,11 @@ public class AltaDepartamentoWindow extends JDialog {
 
     private JTextField txtNombre;
     private JTextField txtLocalidad;
+    private ListadoDepartamentoWindow listado;
 
     public AltaDepartamentoWindow(Frame owner) {
         super(owner, I18n.t(22), true);   // “Alta Departamento”
+        this.listado = listado;
         setSize(400, 250);
         setLocationRelativeTo(owner);
         setLayout(new GridBagLayout());
@@ -62,8 +65,8 @@ public class AltaDepartamentoWindow extends JDialog {
         // Validación nombre
         if (nombre.length() < 2 || !nombre.matches("[A-Za-zÁÉÍÓÚáéíóúÑñ ]+")) {
             JOptionPane.showMessageDialog(this,
-                    I18n.t(7),  // Error
-                    I18n.t(7),
+                    I18n.t(Textos.ERROR_NOMBRE_INVALIDO),
+                    I18n.t(Textos.ERROR),
                     JOptionPane.ERROR_MESSAGE);
             return;
         }
@@ -71,30 +74,44 @@ public class AltaDepartamentoWindow extends JDialog {
         // Validación localidad
         if (localidad.isEmpty() || !localidad.matches("[A-Za-zÁÉÍÓÚáéíóúÑñ ]+")) {
             JOptionPane.showMessageDialog(this,
-                    I18n.t(7),
-                    I18n.t(7),
+                    I18n.t(Textos.ERROR_LOCALIDAD_INVALIDA),
+                    I18n.t(Textos.ERROR),
+                    JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        // 🔥 Comprobar duplicado (nombre + localidad)
+        boolean existe = data.Data.getLista().stream().anyMatch(
+                d -> d.getNombre().equalsIgnoreCase(nombre)
+                        && d.getLocalidad().equalsIgnoreCase(localidad)
+        );
+
+        if (existe) {
+            JOptionPane.showMessageDialog(this,
+                    I18n.t(Textos.ERROR_DEPARTAMENTO_DUPLICADO),  // texto distinto por idioma
+                    I18n.t(Textos.TITULO_DEPARTAMENTO_DUPLICADO), // título distinto por idioma
                     JOptionPane.ERROR_MESSAGE);
             return;
         }
 
         // Crear departamento
         Departamento d = new Departamento(nombre, localidad);
-        Data.addDepartamento(d);
+        Data.addDepartamento(d);  // ya guarda en TSV
+
+        // 🔄 Refrescar listado si está abierto
+        if (listado != null) {
+            listado.refrescarTabla();
+        }
 
         JOptionPane.showMessageDialog(this,
-                I18n.t(9),
-                I18n.t(0),
+                I18n.t(Textos.OPERACION_OK),
+                I18n.t(Textos.APP_TITULO),
                 JOptionPane.INFORMATION_MESSAGE);
-
-        //  Refrescar listado si está abierto
-        if (getOwner() instanceof MainWindow main) {
-            if (main.ventanaListado != null) {
-                main.ventanaListado.refrescarTabla();
-            }
-        }
 
         dispose();
     }
+
+}
 
 
 }

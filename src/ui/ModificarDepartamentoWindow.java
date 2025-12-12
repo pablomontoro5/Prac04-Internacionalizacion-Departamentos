@@ -6,6 +6,7 @@ import java.awt.*;
 import data.DataStorage;
 import i18n.I18n;
 import data.Data;
+import i18n.Textos;
 import model.Departamento;
 
 public class ModificarDepartamentoWindow extends JDialog {
@@ -146,20 +147,47 @@ public class ModificarDepartamentoWindow extends JDialog {
     private void guardar() {
         if (!btnGuardar.isEnabled()) return;
 
+        int nuevoId;
+        try {
+            nuevoId = Integer.parseInt(txtId.getText().trim());
+        } catch (NumberFormatException ex) {
+            JOptionPane.showMessageDialog(this,
+                    I18n.t(Textos.ERROR_ID_INVALIDO),
+                    I18n.t(Textos.ERROR),
+                    JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        // Verificar ID duplicado (excepto si es el mismo departamento)
+        if (nuevoId != departamentoActual.getId()) {
+            boolean existe = Data.getLista().stream().anyMatch(d -> d.getId() == nuevoId);
+            if (existe) {
+                JOptionPane.showMessageDialog(this,
+                        I18n.t(Textos.ERROR_ID_DUPLICADO),
+                        I18n.t(Textos.ERROR),
+                        JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            // Cambiar ID
+            departamentoActual.setId(nuevoId);
+        }
+
+        // Actualizar nombre y localidad
         departamentoActual.setNombre(txtNombre.getText().trim());
         departamentoActual.setLocalidad(txtLocalidad.getText().trim());
 
+        // Guardar en disco
         DataStorage.save(Data.getLista());
 
-        JOptionPane.showMessageDialog(this, "Guardado correctamente");
+        JOptionPane.showMessageDialog(this, I18n.t(Textos.GUARDADO_OK));
 
-        // Refrescar el listado ANTES de cerrar
-        if (parentList != null) {
-            parentList.refrescarTabla();
-        }
+        // Actualizar listado si está abierto
+        if (parentList != null) parentList.refrescarTabla();
 
         dispose();
     }
+
 
 
 

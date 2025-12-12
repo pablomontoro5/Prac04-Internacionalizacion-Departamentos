@@ -4,6 +4,7 @@ import javax.swing.*;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,51 +17,37 @@ public class I18n {
     // CARGAR ARCHIVO idiomas.txt
     // ==============================================
     public static void cargarIdiomas() {
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(
+                I18n.class.getResourceAsStream("/idiomas.txt"), StandardCharsets.UTF_8))) {
 
-        try (InputStream is = I18n.class.getResourceAsStream("/idiomas.txt")) {
+            int totalIdiomas = Integer.parseInt(br.readLine().trim());
 
-            if (is == null)
-                throw new RuntimeException("❌ No se pudo cargar idiomas.txt desde resources");
+            idiomas.clear();
 
-            BufferedReader br = new BufferedReader(new InputStreamReader(is, "UTF-8"));
+            for (int i = 0; i < totalIdiomas; i++) {
 
-            // 1) Número de idiomas
-            int numIdiomas = Integer.parseInt(br.readLine().trim());
-            System.out.println("Cargando " + numIdiomas + " idiomas...");
-
-            // 2) Leer cada idioma
-            for (int i = 0; i < numIdiomas; i++) {
-
-                // Código
                 String codigo = br.readLine().trim();
-
-                // Cadenas
                 int numCadenas = Integer.parseInt(br.readLine().trim());
+
                 List<String> cadenas = new ArrayList<>();
+                for (int c = 0; c < numCadenas; c++)
+                    cadenas.add(br.readLine());
 
-                for (int j = 0; j < numCadenas; j++)
-                    cadenas.add(br.readLine().trim());
+                int numImagenes = Integer.parseInt(br.readLine().trim());
+                List<ImageIcon> imagenes = new ArrayList<>();
+                for (int j = 0; j < numImagenes; j++)
+                    imagenes.add(new ImageIcon(I18n.class.getResource(br.readLine().trim())));
 
-                // Imágenes
-                int numImgs = Integer.parseInt(br.readLine().trim());
-                List<ImageIcon> imgs = new ArrayList<>();
-
-                for (int k = 0; k < numImgs; k++) {
-                    String ruta = br.readLine().trim();
-                    ImageIcon icon = cargarIcono(ruta);
-                    imgs.add(icon);
-                }
-
-                idiomas.add(new Idioma(codigo, cadenas, imgs));
+                idiomas.add(new Idioma(codigo, cadenas, imagenes));
             }
 
-            idiomaActual = idiomas.get(0); // idioma por defecto
-            System.out.println("Idioma cargado por defecto: " + idiomaActual.getCodigo());
+            idiomaActual = idiomas.get(0);
 
         } catch (Exception e) {
-            throw new RuntimeException("❌ Error cargando idiomas: " + e.getMessage(), e);
+            throw new RuntimeException("Error cargando idiomas: " + e);
         }
     }
+
 
     // ==============================================
     // UTILIDAD: Cargar icono con comprobación

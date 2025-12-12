@@ -4,6 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 import i18n.I18n;
 import data.Data;
+import i18n.Textos;
 import model.Departamento;
 
 public class BajaDepartamentoWindow extends JDialog {
@@ -14,12 +15,9 @@ public class BajaDepartamentoWindow extends JDialog {
 
     private Departamento deptoEncontrado = null;
     private JButton btnEliminar;
-    private ListadoDepartamentoWindow listado;
 
     public BajaDepartamentoWindow(JFrame parent) {
-        super(parent, I18n.t(0) + " - " + I18n.t(24), true); // Título consistente
-        this.listado = listado;
-
+        super(parent, I18n.t(Textos.DEL_DEP) + " - " + I18n.t(24), true); // Título consistente
         setSize(420, 260);
         setLocationRelativeTo(parent);
         setLayout(new BorderLayout());
@@ -27,9 +25,9 @@ public class BajaDepartamentoWindow extends JDialog {
         JPanel panelCampos = new JPanel(new GridLayout(3, 2, 10, 10));
         panelCampos.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-        JLabel lblId = new JLabel(I18n.t(19));        // ID
-        JLabel lblNombre = new JLabel(I18n.t(20));    // Nombre
-        JLabel lblLocalidad = new JLabel(I18n.t(21)); // Localidad
+        JLabel lblId = new JLabel(I18n.t(Textos.ID));        // ID
+        JLabel lblNombre = new JLabel(I18n.t(Textos.NOMBRE));    // Nombre
+        JLabel lblLocalidad = new JLabel(I18n.t(Textos.LOCALIDAD)); // Localidad
 
         txtId = new JTextField();
         txtNombre = new JTextField();
@@ -47,9 +45,9 @@ public class BajaDepartamentoWindow extends JDialog {
 
         JPanel panelBotones = new JPanel();
 
-        JButton btnBuscar = new JButton(I18n.t(26));   // Buscar
-        btnEliminar = new JButton(I18n.t(27));        // Eliminar (mejor que Aceptar)
-        JButton btnCancelar = new JButton(I18n.t(6)); // Cancelar
+        JButton btnBuscar = new JButton(I18n.t(Textos.BUSCAR));   // Buscar
+        btnEliminar = new JButton(I18n.t(Textos.ELIMINAR_SELECCION));        // Eliminar (mejor que Aceptar)
+        JButton btnCancelar = new JButton(I18n.t(Textos.CANCELAR)); // Cancelar
 
         btnEliminar.setEnabled(false);
 
@@ -98,7 +96,7 @@ public class BajaDepartamentoWindow extends JDialog {
         btnEliminar.setEnabled(false);
 
         JOptionPane.showMessageDialog(this,
-                I18n.t(8),  // No encontrado
+                I18n.t(Textos.NO_ENCONTRADO),  // No encontrado
                 ERROR,
                 JOptionPane.ERROR_MESSAGE);
     }
@@ -108,8 +106,8 @@ public class BajaDepartamentoWindow extends JDialog {
 
         if (idTexto.isEmpty() || !idTexto.matches("\\d+")) {
             JOptionPane.showMessageDialog(this,
-                    I18n.t(7),  // Error
-                    I18n.t(7),
+                    I18n.t(Textos.ERROR),  // Error
+                    I18n.t(Textos.ERROR),
                     JOptionPane.ERROR_MESSAGE);
             return;
         }
@@ -126,12 +124,13 @@ public class BajaDepartamentoWindow extends JDialog {
             return;
         }
 
-        // Confirmación
+        // ✅ Confirmación internacionalizada
         int opcion = JOptionPane.showConfirmDialog(
                 this,
-                "¿Eliminar departamento?",
-                "Confirmar",
-                JOptionPane.YES_NO_OPTION);
+                I18n.t(Textos.DEL_DEP),      // "Eliminar Departamento" / "Delete Department" / ...
+                I18n.t(Textos.APP_TITLE),    // Título de la app en cada idioma
+                JOptionPane.YES_NO_OPTION
+        );
 
         if (opcion != JOptionPane.YES_OPTION) return;
 
@@ -139,8 +138,8 @@ public class BajaDepartamentoWindow extends JDialog {
         Data.eliminarDepartamento(d.getId());
 
         JOptionPane.showMessageDialog(this,
-                I18n.t(9),   // Operación completada
-                I18n.t(0),
+                I18n.t(Textos.OK),   // Operación completada
+                I18n.t(0),   // Título app
                 JOptionPane.INFORMATION_MESSAGE);
 
         // REFRESCAR LISTADO SI ESTÁ ABIERTO

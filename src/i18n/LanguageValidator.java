@@ -7,7 +7,7 @@ public class LanguageValidator {
     public static void validate() {
         for (Idioma lang : I18n.getIdiomasList()) {
 
-            int expectedStrings = 28;
+            int expectedStrings = Textos.values().length;
             int expectedImages = 2;
 
             if (lang.getNumCadenas() != expectedStrings) {

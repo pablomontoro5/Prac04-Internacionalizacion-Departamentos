@@ -12,11 +12,9 @@ public class AltaDepartamentoWindow extends JDialog {
 
     private JTextField txtNombre;
     private JTextField txtLocalidad;
-    private ListadoDepartamentoWindow listado;
 
     public AltaDepartamentoWindow(Frame owner) {
-        super(owner, I18n.t(22), true);   // “Alta Departamento”
-        this.listado = listado;
+        super(owner, I18n.t(Textos.ALTA_DEP), true);   // “Alta Departamento”
         setSize(400, 250);
         setLocationRelativeTo(owner);
         setLayout(new GridBagLayout());
@@ -27,7 +25,7 @@ public class AltaDepartamentoWindow extends JDialog {
 
         // ---- Nombre ----
         c.gridx = 0; c.gridy = 0;
-        add(new JLabel(I18n.t(20) + ":"), c);
+        add(new JLabel(I18n.t(Textos.NOMBRE) + ":"), c);
 
         txtNombre = new JTextField();
         c.gridx = 1;
@@ -35,7 +33,7 @@ public class AltaDepartamentoWindow extends JDialog {
 
         // ---- Localidad ----
         c.gridx = 0; c.gridy = 1;
-        add(new JLabel(I18n.t(21) + ":"), c);
+        add(new JLabel(I18n.t(Textos.LOCALIDAD) + ":"), c);
 
         txtLocalidad = new JTextField();
         c.gridx = 1;
@@ -43,8 +41,8 @@ public class AltaDepartamentoWindow extends JDialog {
 
         // ---- Botones ----
         JPanel panelBotones = new JPanel();
-        JButton btnAceptar = new JButton(I18n.t(5));   // Aceptar
-        JButton btnCancelar = new JButton(I18n.t(6));  // Cancelar
+        JButton btnAceptar = new JButton(I18n.t(Textos.ACEPTAR));   // Aceptar
+        JButton btnCancelar = new JButton(I18n.t(Textos.CANCELAR));  // Cancelar
 
         btnAceptar.addActionListener(this::onAceptar);
         btnCancelar.addActionListener(e -> dispose());
@@ -65,8 +63,8 @@ public class AltaDepartamentoWindow extends JDialog {
         // Validación nombre
         if (nombre.length() < 2 || !nombre.matches("[A-Za-zÁÉÍÓÚáéíóúÑñ ]+")) {
             JOptionPane.showMessageDialog(this,
-                    I18n.t(Textos.ERROR_NOMBRE_INVALIDO),
-                    I18n.t(Textos.ERROR),
+                    I18n.t(7),  // Error
+                    I18n.t(7),
                     JOptionPane.ERROR_MESSAGE);
             return;
         }
@@ -74,44 +72,47 @@ public class AltaDepartamentoWindow extends JDialog {
         // Validación localidad
         if (localidad.isEmpty() || !localidad.matches("[A-Za-zÁÉÍÓÚáéíóúÑñ ]+")) {
             JOptionPane.showMessageDialog(this,
-                    I18n.t(Textos.ERROR_LOCALIDAD_INVALIDA),
-                    I18n.t(Textos.ERROR),
+                    I18n.t(7),
+                    I18n.t(7),
                     JOptionPane.ERROR_MESSAGE);
             return;
         }
 
-        // 🔥 Comprobar duplicado (nombre + localidad)
-        boolean existe = data.Data.getLista().stream().anyMatch(
-                d -> d.getNombre().equalsIgnoreCase(nombre)
-                        && d.getLocalidad().equalsIgnoreCase(localidad)
+        //  NUEVO: comprobar si ya existe un departamento con mismo nombre + localidad
+        boolean existeDuplicado = Data.getLista().stream().anyMatch(dep ->
+                dep.getNombre().equalsIgnoreCase(nombre) &&
+                        dep.getLocalidad().equalsIgnoreCase(localidad)
         );
 
-        if (existe) {
-            JOptionPane.showMessageDialog(this,
-                    I18n.t(Textos.ERROR_DEPARTAMENTO_DUPLICADO),  // texto distinto por idioma
-                    I18n.t(Textos.TITULO_DEPARTAMENTO_DUPLICADO), // título distinto por idioma
-                    JOptionPane.ERROR_MESSAGE);
+        if (existeDuplicado) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Ya existe un departamento con ese nombre y localidad.",
+                    "Departamento duplicado",
+                    JOptionPane.ERROR_MESSAGE
+            );
             return;
         }
 
         // Crear departamento
         Departamento d = new Departamento(nombre, localidad);
-        Data.addDepartamento(d);  // ya guarda en TSV
-
-        // 🔄 Refrescar listado si está abierto
-        if (listado != null) {
-            listado.refrescarTabla();
-        }
+        Data.addDepartamento(d);
 
         JOptionPane.showMessageDialog(this,
-                I18n.t(Textos.OPERACION_OK),
-                I18n.t(Textos.APP_TITULO),
+                I18n.t(9),
+                I18n.t(0),
                 JOptionPane.INFORMATION_MESSAGE);
+
+        //  Refrescar listado si está abierto
+        if (getOwner() instanceof MainWindow main) {
+            if (main.ventanaListado != null) {
+                main.ventanaListado.refrescarTabla();
+            }
+        }
 
         dispose();
     }
 
-}
 
 
 }

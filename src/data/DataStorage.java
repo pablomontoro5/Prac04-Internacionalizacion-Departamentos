@@ -68,7 +68,7 @@ public class DataStorage {
             e.printStackTrace();
         }
 
-        // 🔥 Actualizar el ID persistente
+        // Actualizar el ID persistente
         int max = lista.stream().mapToInt(Departamento::getId).max().orElse(0);
         saveLastId(max);
     }
@@ -110,5 +110,13 @@ public class DataStorage {
         }
         return null;
     }
+    public static void saveLastIdFromList(List<Departamento> lista) {
+        int maxId = 0;
+        for (Departamento d : lista) {
+            if (d.getId() > maxId) maxId = d.getId();
+        }
+        IdStorage.saveLastId(maxId);
+    }
+
 
 }

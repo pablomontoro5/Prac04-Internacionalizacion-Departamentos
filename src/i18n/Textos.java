@@ -12,7 +12,7 @@ public enum Textos {
     ERROR(7),
     NO_ENCONTRADO(8),
     OK(9),
-    ARCHIVO(10),
+    SALIDA(10),
     SALIR(11),
     OPERACIONES(12),
     IDIOMA(13),
@@ -21,15 +21,16 @@ public enum Textos {
     FRANCES(16),
     ITALIANO(17),
     ALEMAN(18),
-    ID(19),
-    NOMBRE(20),
-    LOCALIDAD(21),
-    ALTA_DEP(22),
-    MOD_DEP(23),
-    DEL_DEP(24),
-    LISTADO(25),
-    BUSCAR(26),
-    ELIMINAR_SELECCION(27);
+    POLACO(19),
+    ID(20),
+    NOMBRE(21),
+    LOCALIDAD(22),
+    ALTA_DEP(23),
+    MOD_DEP(24),
+    DEL_DEP(25),
+    LISTADO(26),
+    BUSCAR(27),
+    ELIMINAR_SELECCION(28);
 
     public final int index;
 

@@ -1,30 +1,30 @@
 package data;
 
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 public class IdStorage {
 
-    private static final String FILE = "id.txt";
+    private static final Path FILE = Paths.get("id.txt");
 
     public static int loadLastId() {
         try {
-            File f = new File(FILE);
-            if (!f.exists()) return 0;
-
-            try (BufferedReader br = new BufferedReader(new FileReader(f))) {
-                return Integer.parseInt(br.readLine().trim());
-            }
-
+            if (!Files.exists(FILE)) return 0;
+            String s = Files.readString(FILE).trim();
+            return Integer.parseInt(s);
         } catch (Exception e) {
             return 0;
         }
     }
 
-    public static void saveLastId(int id) {
-        try (PrintWriter pw = new PrintWriter(new FileWriter(FILE))) {
-            pw.println(id);
-        } catch (Exception e) {
+    public static void saveLastId(int lastId) {
+        try {
+            Files.writeString(FILE, String.valueOf(lastId));
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
 }
+

@@ -2,6 +2,8 @@ package ui;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 
 import i18n.I18n;
 import i18n.Textos;
@@ -10,36 +12,50 @@ import util.IconManager;
 public class MainWindow extends JFrame {
 
     private JLabel lblImagen;
+    private Image imagenOriginal;
+    private JLabel lblTitulo;
+    private JLabel lblSubtitulo;
     public ListadoDepartamentoWindow ventanaListado;
     public MainWindow() {
-        /*System.out.println("ADD = " + IconManager.ADD);
-        System.out.println("DELETE = " + IconManager.DELETE);
-        System.out.println("EDIT = " + IconManager.EDIT);
-        System.out.println("SEARCH = " + IconManager.SEARCH);
-        System.out.println("LIST = " + IconManager.LIST);
-        System.out.println("SUN = " + IconManager.SUN);
-        System.out.println("MOON = " + IconManager.MOON);
-        */
 
-
-        setTitle(I18n.t(0));
+        setTitle(I18n.t(Textos.APP_TITLE));  // mejor que I18n.t(0)
         setIconImage(new ImageIcon(getClass().getResource("/img/logo.png")).getImage());
+
         setSize(900, 550);
         setMinimumSize(new Dimension(750, 480));
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setLayout(new BorderLayout());
 
-        // 🔥 Fix global de FlatLaf para iconos en menús
+        // Fix global de FlatLaf para iconos en menús
         UIManager.put("MenuItem.iconTextGap", 10);
         UIManager.put("MenuItem.minimumIconSize", new Dimension(18, 18));
 
+        // ===== MENÚ + CABECERA =====
         crearMenu();
         crearHeader();
+
+        // ===== PANEL CENTRAL (IMAGEN + TEXTO) =====
+        // Aquí es donde debe existir y añadirse lblImagen (dentro de crearImagePanel)
         crearImagePanel();
+
+        // ===== CARGAR IMAGEN DESDE I18N =====
+        ImageIcon icon = I18n.img(1);  // 0 = bandera, 1 = campus
+        imagenOriginal = (icon != null) ? icon.getImage() : null;
+
+        // Escalar al arrancar y cuando se redimensione
+        addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentResized(ComponentEvent e) {
+                escalarImagen();
+            }
+        });
+
+        escalarImagen();
 
         setVisible(true);
     }
+
 
     // =========================================================
     // HEADER MODERNO
@@ -87,20 +103,13 @@ public class MainWindow extends JFrame {
         JPanel panel = new JPanel(new BorderLayout());
         panel.setBackground(new Color(245, 247, 250));
 
-        lblImagen = new JLabel("", SwingConstants.CENTER);
-
-        ImageIcon img = I18n.getImagen(1);
-        if (img != null) {
-            Image scaled = img.getImage().getScaledInstance(400, 260, Image.SCALE_SMOOTH);
-            lblImagen.setIcon(new ImageIcon(scaled));
-        } else {
-            lblImagen.setText(I18n.t(0));
-            lblImagen.setFont(new Font("Segoe UI", Font.BOLD, 24));
-        }
+        lblImagen = new JLabel();
+        lblImagen.setHorizontalAlignment(SwingConstants.CENTER);
 
         panel.add(lblImagen, BorderLayout.CENTER);
         add(panel, BorderLayout.CENTER);
     }
+
 
     // =========================================================
     // MENÚ SUPERIOR
@@ -159,7 +168,7 @@ public class MainWindow extends JFrame {
         menuIdioma.add(crearItemIdioma("pl", Textos.POLACO.index));
 
         // ---- Tema Claro/Oscuro ----
-        JMenu menuTema = new JMenu("Tema");
+        JMenu menuTema = new JMenu(I18n.t(Textos.TEMA));
 
         JMenuItem itemClaro = new JMenuItem("Claro", IconManager.SUN);
         itemClaro.addActionListener(e -> setTheme(false));
@@ -171,13 +180,13 @@ public class MainWindow extends JFrame {
         menuTema.add(itemOscuro);
 
         // ---- Ayuda ----
-        JMenu menuAyuda = new JMenu("Ayuda");
-        JMenuItem itemAcerca = new JMenuItem("Acerca de…");
+        JMenu menuAyuda = new JMenu(I18n.t(Textos.AYUDA));
+        JMenuItem itemAcerca = new JMenuItem(I18n.t(Textos.ACERCA_DE));
 
         itemAcerca.addActionListener(e ->
                 JOptionPane.showMessageDialog(this,
                         "Aplicación de Departamentos\nVersión 1.0\n© 2025",
-                        "Acerca de",
+                        I18n.t(Textos.ACERCA_DE),
                         JOptionPane.INFORMATION_MESSAGE)
         );
 
@@ -235,12 +244,26 @@ public class MainWindow extends JFrame {
         return item;
     }
 
-    // Recargar interfaz completa
+
     private void cambiarIdioma(String codigo) {
         I18n.setIdioma(codigo);
-        dispose();
-        new MainWindow();
+
+        // Recargar imagen del nuevo idioma
+        ImageIcon icon = I18n.img(1);
+        imagenOriginal = icon.getImage();
+        escalarImagen();
+
+        // Actualizar textos (títulos, botones, labels...)
+        actualizarTextos();
+
+        // Reconstruir menú para que cambie "Help/Ayuda", etc.
+        crearMenu();
+
+        // Forzar refresco visual
+        revalidate();
+        repaint();
     }
+
 
     // Tema claro/oscuro
     private void setTheme(boolean dark) {
@@ -257,4 +280,39 @@ public class MainWindow extends JFrame {
             ex.printStackTrace();
         }
     }
+    private void escalarImagen() {
+        if (imagenOriginal == null || lblImagen == null) return;
+
+        int ancho = lblImagen.getParent().getWidth();
+        if (ancho <= 0) return;
+
+        Image escalada = imagenOriginal.getScaledInstance(
+                ancho,
+                -1, // mantiene proporción
+                Image.SCALE_SMOOTH
+        );
+
+        lblImagen.setIcon(new ImageIcon(escalada));
+    }
+
+
+    private void actualizarTextos() {
+
+        // Título de la ventana
+        setTitle(I18n.t(Textos.APP_TITLE));
+
+        // Si tienes un label de título grande
+        if (lblTitulo != null) {
+            lblTitulo.setText(I18n.t(Textos.APP_TITLE));
+        }
+
+        // Si tienes subtítulo
+        if (lblSubtitulo != null) {
+            lblSubtitulo.setText("Práctica 4 – IPO | Internacionalización completa");
+        }
+
+        // Reconstruir menú (cambia Ayuda/Help, etc.)
+        crearMenu();
+    }
+
 }

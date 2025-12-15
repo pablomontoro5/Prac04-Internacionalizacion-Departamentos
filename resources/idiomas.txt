@@ -1,5 +1,5 @@
 es
-29
+32
 Aplicación de Departamentos
 Alta
 Baja
@@ -29,11 +29,14 @@ Eliminar Departamento
 Listado de Departamentos
 Buscar
 Eliminar Seleccionado
+Ayuda
+Acerca de...
+Tema
 2
 /img/banderaEs.png
 /img/campusEs.png
 en
-29
+32
 Departments Application
 Create
 Delete
@@ -63,11 +66,14 @@ Delete Department
 Department List
 Search
 Delete Selected
+Help
+About...
+Theme
 2
 /img/banderaEn.png
 /img/campusEn.png
 de
-29
+32
 Abteilungsanwendung
 Erstellen
 Löschen
@@ -97,11 +103,14 @@ Abteilung löschen
 Abteilungsliste
 Suchen
 Auswahl löschen
+Hilfe
+Über...
+Thema
 2
 /img/banderaDe.png
 /img/campusDe.png
 fr
-29
+32
 Application des Départements
 Ajouter
 Supprimer
@@ -131,11 +140,14 @@ Supprimer Département
 Liste des Départements
 Rechercher
 Supprimer Sélection
+Aide
+À propos...
+Thème
 2
 /img/banderaFr.png
 /img/campusFr.png
 it
-29
+32
 Applicazione dei Dipartimenti
 Crea
 Elimina
@@ -165,11 +177,14 @@ Elimina Dipartimento
 Elenco Dipartimenti
 Cerca
 Elimina Selezionato
+Aiuto
+Informazioni...
+Tema
 2
 /img/banderaIt.png
 /img/campusIt.png
 pl
-29
+32
 Aplikacja Działów
 Dodaj
 Usuń
@@ -199,6 +214,9 @@ Usuń Dział
 Lista Działów
 Wyszukaj
 Usuń Zaznaczone
+Pomoc
+O aplikacji...
+Motyw
 2
 /img/banderaPl.png
 /img/campusPl.png

@@ -30,11 +30,15 @@ public enum Textos {
     DEL_DEP(25),
     LISTADO(26),
     BUSCAR(27),
-    ELIMINAR_SELECCION(28);
+    ELIMINAR_SELECCION(28),
+    AYUDA(29),
+    ACERCA_DE(30),
+    TEMA(31);
 
     public final int index;
 
-    Textos(int index) {
+    Textos(int index)
+    {
         this.index = index;
     }
 }

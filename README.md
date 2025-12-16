@@ -109,7 +109,7 @@ resources/
 Este repositorio contiene el código fuente completo de la práctica.  
 La documentación detallada se encuentra en la memoria entregada junto al proyecto.
 
- [Acceder a la memoria completa en Google Docs](https://docs.google.com/document/d/1eJRbv2fu9FfUyOx_BT0LVTUFN85HZbtTEei0gbVMhek/edit)
+ [Acceder a la memoria completa en Google Docs](https://docs.google.com/document/d/1eJRbv2fu9FfUyOx_BToLVTUFN85HBZtTEei0gbVMehk/edit?tab=t.0#heading=h.vvg1az7cvq9k)
 
 
 

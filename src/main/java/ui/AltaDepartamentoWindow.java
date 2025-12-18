@@ -63,8 +63,8 @@ public class AltaDepartamentoWindow extends JDialog {
         // Validación nombre
         if (nombre.length() < 2 || !nombre.matches("[A-Za-zÁÉÍÓÚáéíóúÑñ ]+")) {
             JOptionPane.showMessageDialog(this,
-                    I18n.t(7),  // Error
-                    I18n.t(7),
+                    I18n.t(Textos.ERROR),  // Error
+                    I18n.t(Textos.ERROR),
                     JOptionPane.ERROR_MESSAGE);
             return;
         }
@@ -100,8 +100,8 @@ public class AltaDepartamentoWindow extends JDialog {
         Data.addDepartamento(d);
 
         JOptionPane.showMessageDialog(this,
-                I18n.t(9),
-                I18n.t(0),
+                I18n.t(Textos.OK),
+                I18n.t(Textos.APP_TITLE),
                 JOptionPane.INFORMATION_MESSAGE);
 
         //  Refrescar listado si está abierto

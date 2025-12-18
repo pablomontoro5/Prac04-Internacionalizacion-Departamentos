@@ -214,7 +214,7 @@ Aplikacja Działów
 Praktyka 4 – IPO | Pełna internacjonalizacja
 Dodaj
 Usuń
-Wyszukaj
+Szukaj
 Modyfikuj
 Zatwierdź
 Anuluj
@@ -222,7 +222,7 @@ Błąd
 Nie znaleziono działu
 Operacja zakończona
 Wyjście
-Zakończ
+Zamknij
 Operacje
 Język
 Hiszpański
@@ -233,18 +233,18 @@ Niemiecki
 Polski
 ID
 Nazwa
-Miejscowość
+Miasto
 Dodaj Dział
 Modyfikuj Dział
 Usuń Dział
 Lista Działów
-Wyszukaj
-Usuń Zaznaczone
+Szukaj
+Usuń zaznaczone
 Pomoc
-O aplikacji...
+Informacje...
 Motyw
 Zduplikowany dział
-Dział o tej nazwie i miejscowości już istnieje.
+Dział o tej nazwie i tym mieście już istnieje.
 Jasny
 Ciemny
 2

@@ -124,7 +124,7 @@ public class BajaDepartamentoWindow extends JDialog {
             return;
         }
 
-        // ✅ Confirmación internacionalizada
+        //  Confirmación internacionalizada
         int opcion = JOptionPane.showConfirmDialog(
                 this,
                 I18n.t(Textos.DEL_DEP),      // "Eliminar Departamento" / "Delete Department" / ...

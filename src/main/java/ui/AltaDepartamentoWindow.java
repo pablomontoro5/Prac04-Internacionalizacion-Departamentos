@@ -87,12 +87,13 @@ public class AltaDepartamentoWindow extends JDialog {
         if (existeDuplicado) {
             JOptionPane.showMessageDialog(
                     this,
-                    "Ya existe un departamento con ese nombre y localidad.",
-                    "Departamento duplicado",
+                    I18n.t(Textos.DEP_DUPLICADO_MSG),
+                    I18n.t(Textos.DEP_DUPLICADO_TITLE),
                     JOptionPane.ERROR_MESSAGE
             );
             return;
         }
+
 
         // Crear departamento
         Departamento d = new Departamento(nombre, localidad);

@@ -1,6 +1,7 @@
 es
-32
+37
 Aplicación de Departamentos
+Práctica 4 – IPO | Internacionalización completa
 Alta
 Baja
 Consulta
@@ -32,12 +33,17 @@ Eliminar Seleccionado
 Ayuda
 Acerca de...
 Tema
+Departamento duplicado
+Ya existe un departamento con ese nombre y localidad.
+Claro
+Oscuro
 2
 /img/banderaEs.png
 /img/campusEs.png
 en
-32
+37
 Departments Application
+Practice 4 – IPO | Full internationalization
 Create
 Delete
 Search
@@ -69,12 +75,17 @@ Delete Selected
 Help
 About...
 Theme
+Duplicate department
+A department with that name and city already exists.
+Light
+Dark
 2
 /img/banderaEn.png
 /img/campusEn.png
 de
-32
+37
 Abteilungsanwendung
+Praktikum 4 – IPO | Vollständige Internationalisierung
 Erstellen
 Löschen
 Suchen
@@ -106,12 +117,17 @@ Auswahl löschen
 Hilfe
 Über...
 Thema
+Doppelter Fachbereich
+Es existiert bereits eine Abteilung mit diesem Namen und dieser Stadt.
+Hell
+Dunkel
 2
 /img/banderaDe.png
 /img/campusDe.png
 fr
-32
+37
 Application des Départements
+Pratique 4 – IPO | Internationalisation complète
 Ajouter
 Supprimer
 Rechercher
@@ -143,12 +159,17 @@ Supprimer Sélection
 Aide
 À propos...
 Thème
+Département en double
+Un département avec ce nom et cette ville existe déjà.
+Clair
+Sombre
 2
 /img/banderaFr.png
 /img/campusFr.png
 it
-32
+37
 Applicazione dei Dipartimenti
+Pratica 4 – IPO | Internazionalizzazione completa
 Crea
 Elimina
 Cerca
@@ -180,12 +201,17 @@ Elimina Selezionato
 Aiuto
 Informazioni...
 Tema
+Dipartimento duplicato
+Esiste già un dipartimento con questo nome e questa città.
+Chiaro
+Scuro
 2
 /img/banderaIt.png
 /img/campusIt.png
 pl
-32
+37
 Aplikacja Działów
+Praktyka 4 – IPO | Pełna internacjonalizacja
 Dodaj
 Usuń
 Wyszukaj
@@ -217,6 +243,10 @@ Usuń Zaznaczone
 Pomoc
 O aplikacji...
 Motyw
+Zduplikowany dział
+Dział o tej nazwie i miejscowości już istnieje.
+Jasny
+Ciemny
 2
 /img/banderaPl.png
 /img/campusPl.png

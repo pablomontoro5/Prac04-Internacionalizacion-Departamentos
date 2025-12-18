@@ -1,9 +1,11 @@
 package i18n;
 
 import javax.swing.*;
+import java.awt.*;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -70,12 +72,30 @@ public class I18n {
     // ==============================================
     private static ImageIcon cargarIcono(String ruta) {
         try {
-            return new ImageIcon(I18n.class.getResource(ruta));
+            URL url = I18n.class.getResource(ruta);
+            if (url == null) {
+                System.err.println("⚠ No se pudo cargar la imagen: " + ruta);
+                return null;
+            }
+
+            ImageIcon icono = new ImageIcon(url);
+
+            // Solo banderas
+            if (ruta.contains("bandera")) {
+                Image img = icono.getImage().getScaledInstance(32, 20, Image.SCALE_SMOOTH);
+                return new ImageIcon(img);
+            }
+
+            // Campus u otras imágenes: original
+            return icono;
+
         } catch (Exception e) {
             System.err.println("⚠ No se pudo cargar la imagen: " + ruta);
             return null;
         }
     }
+
+
 
     // ==============================================
     // CAMBIO DE IDIOMA

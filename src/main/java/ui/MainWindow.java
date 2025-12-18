@@ -6,6 +6,7 @@ import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 
 import i18n.I18n;
+import i18n.Idioma;
 import i18n.Textos;
 import util.IconManager;
 
@@ -15,6 +16,7 @@ public class MainWindow extends JFrame {
     private Image imagenOriginal;
     private JLabel lblTitulo;
     private JLabel lblSubtitulo;
+    private JLabel lblCampus;
     public ListadoDepartamentoWindow ventanaListado;
     public MainWindow() {
 
@@ -41,7 +43,15 @@ public class MainWindow extends JFrame {
 
         // ===== CARGAR IMAGEN DESDE I18N =====
         ImageIcon icon = I18n.img(1);  // 0 = bandera, 1 = campus
+
+        lblCampus = new JLabel(icon);
+        lblCampus.setHorizontalAlignment(SwingConstants.CENTER);
+        lblCampus.setVerticalAlignment(SwingConstants.CENTER);
+
+        // Añadir al contenedor principal
+        getContentPane().add(lblCampus, BorderLayout.CENTER);
         imagenOriginal = (icon != null) ? icon.getImage() : null;
+
 
         // Escalar al arrancar y cuando se redimensione
         addComponentListener(new ComponentAdapter() {
@@ -56,6 +66,17 @@ public class MainWindow extends JFrame {
         setVisible(true);
     }
 
+    private String nombreIdioma(String codigo) {
+        switch (codigo.toLowerCase()) {
+            case "es": return I18n.t(Textos.ESPAÑOL);
+            case "en": return I18n.t(Textos.INGLES);
+            case "fr": return I18n.t(Textos.FRANCES);
+            case "it": return I18n.t(Textos.ITALIANO);
+            case "de": return I18n.t(Textos.ALEMAN);
+            case "pl": return I18n.t(Textos.POLACO);
+            default:   return codigo; // si añades/quitas idiomas
+        }
+    }
 
     // =========================================================
     // HEADER MODERNO
@@ -66,18 +87,19 @@ public class MainWindow extends JFrame {
         header.setBackground(new Color(28, 35, 48));
         header.setBorder(BorderFactory.createEmptyBorder(18, 25, 18, 25));
 
-        JLabel titulo = new JLabel(I18n.t(0));
-        titulo.setForeground(Color.WHITE);
-        titulo.setFont(new Font("Segoe UI", Font.BOLD, 30));
+        lblTitulo = new JLabel(I18n.t(Textos.APP_TITLE));
+        lblTitulo.setForeground(Color.WHITE);
+        lblTitulo.setFont(new Font("Segoe UI", Font.BOLD, 30));
 
-        JLabel subtitulo = new JLabel("Práctica 4 – IPO | Internacionalización completa");
-        subtitulo.setForeground(new Color(180, 180, 180));
-        subtitulo.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        lblSubtitulo = new JLabel(I18n.t(Textos.APP_SUBTITLE));
+        lblSubtitulo.setForeground(new Color(180, 180, 180));
+        lblSubtitulo.setFont(new Font("Segoe UI", Font.PLAIN, 14));
 
         JPanel panelTextos = new JPanel(new GridLayout(2, 1));
         panelTextos.setOpaque(false);
-        panelTextos.add(titulo);
-        panelTextos.add(subtitulo);
+        panelTextos.add(lblTitulo);
+        panelTextos.add(lblSubtitulo);
+
 
         header.add(panelTextos, BorderLayout.WEST);
         // ---- Añadir logo al header ----
@@ -160,20 +182,28 @@ public class MainWindow extends JFrame {
 
         // ---- Idioma ----
         JMenu menuIdioma = new JMenu(I18n.t(Textos.IDIOMA));
-        menuIdioma.add(crearItemIdioma("es", Textos.ESPAÑOL.index));
-        menuIdioma.add(crearItemIdioma("en", Textos.INGLES.index));
-        menuIdioma.add(crearItemIdioma("fr", Textos.FRANCES.index));
-        menuIdioma.add(crearItemIdioma("it", Textos.ITALIANO.index));
-        menuIdioma.add(crearItemIdioma("de", Textos.ALEMAN.index));
-        menuIdioma.add(crearItemIdioma("pl", Textos.POLACO.index));
+
+        for (Idioma id : I18n.getIdiomasList()) {
+            final String codigo = id.getCodigo();
+
+            JMenuItem item = new JMenuItem(nombreIdioma(codigo), I18n.getImagenIdioma(codigo));
+
+            item.addActionListener(e -> {
+                I18n.setIdioma(codigo);
+                actualizarTextos(); // esto ya recrea el menú
+            });
+
+            menuIdioma.add(item);
+        }
+
 
         // ---- Tema Claro/Oscuro ----
         JMenu menuTema = new JMenu(I18n.t(Textos.TEMA));
 
-        JMenuItem itemClaro = new JMenuItem("Claro", IconManager.SUN);
+        JMenuItem itemClaro = new JMenuItem(I18n.t(Textos.CLARO), IconManager.SUN);
         itemClaro.addActionListener(e -> setTheme(false));
 
-        JMenuItem itemOscuro = new JMenuItem("Oscuro", IconManager.MOON);
+        JMenuItem itemOscuro = new JMenuItem(I18n.t(Textos.OSCURO), IconManager.MOON);
         itemOscuro.addActionListener(e -> setTheme(true));
 
         menuTema.add(itemClaro);
@@ -295,24 +325,38 @@ public class MainWindow extends JFrame {
         lblImagen.setIcon(new ImageIcon(escalada));
     }
 
+    private void actualizarTextosOptionPane() {
+        UIManager.put("OptionPane.okButtonText", I18n.t(Textos.ACEPTAR));
+        UIManager.put("OptionPane.cancelButtonText", I18n.t(Textos.CANCELAR));
+
+        // Si usas confirm dialogs (Sí/No), mejor crear Textos.SI y Textos.NO,
+        // pero mientras puedes reutilizar:
+        UIManager.put("OptionPane.yesButtonText", I18n.t(Textos.ACEPTAR));
+        UIManager.put("OptionPane.noButtonText", I18n.t(Textos.CANCELAR));
+    }
 
     private void actualizarTextos() {
 
-        // Título de la ventana
         setTitle(I18n.t(Textos.APP_TITLE));
 
-        // Si tienes un label de título grande
         if (lblTitulo != null) {
             lblTitulo.setText(I18n.t(Textos.APP_TITLE));
         }
 
-        // Si tienes subtítulo
         if (lblSubtitulo != null) {
-            lblSubtitulo.setText("Práctica 4 – IPO | Internacionalización completa");
+            lblSubtitulo.setText(I18n.t(Textos.APP_SUBTITLE));
+        }
+        if (lblCampus != null) {
+            lblCampus.setIcon(I18n.img(1));
+            lblCampus.revalidate();
+            lblCampus.repaint();
         }
 
-        // Reconstruir menú (cambia Ayuda/Help, etc.)
+
+        actualizarTextosOptionPane();
+
         crearMenu();
     }
+
 
 }

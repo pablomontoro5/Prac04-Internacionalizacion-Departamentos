@@ -3,23 +3,38 @@ package data;
 import model.Departamento;
 
 import java.io.*;
+import java.nio.file.Files;
 import java.util.Comparator;
 import java.util.List;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
 
 public class DataStorage {
 
-    private static final String FILE = "departamentos.tsv";
-    private static final String LAST_ID_FILE = "last_id.txt";
+    private static final Path BASE_DIR =
+            Paths.get(System.getProperty("user.home"), ".departamentosApp");
+
+    private static final Path FILE = BASE_DIR.resolve("departamentos.tsv");
+    private static final Path LAST_ID_FILE = BASE_DIR.resolve("last_id.txt");
+    static {
+        try {
+            Files.createDirectories(BASE_DIR);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 
     // ----------------------------------------------------
     // GUARDAR TODOS LOS DEPARTAMENTOS EN TSV
     // ----------------------------------------------------
     public static void save(List<Departamento> lista) {
-
-        // Ordenar antes de guardar
         lista.sort(Comparator.comparingInt(Departamento::getId));
 
-        try (PrintWriter pw = new PrintWriter(new FileWriter(FILE))) {
+        try (BufferedWriter bw = Files.newBufferedWriter(FILE, StandardCharsets.UTF_8);
+             PrintWriter pw = new PrintWriter(bw)) {
 
             for (Departamento d : lista) {
                 pw.println(d.getId() + "\t" + d.getNombre() + "\t" + d.getLocalidad());
@@ -31,32 +46,28 @@ public class DataStorage {
     }
 
 
+
     // ----------------------------------------------------
     // CARGAR DESDE TSV
     // ----------------------------------------------------
     public static void load(List<Departamento> lista) {
-        File f = new File(FILE);
-        if (!f.exists()) return;
+        if (!Files.exists(FILE)) return;
 
-        try (BufferedReader br = new BufferedReader(new FileReader(f))) {
-
+        try (BufferedReader br = Files.newBufferedReader(FILE, StandardCharsets.UTF_8)) {
             String linea;
 
             while ((linea = br.readLine()) != null) {
                 if (linea.isBlank()) continue;
 
                 String[] p = linea.split("\t");
-
                 if (p.length < 3) continue;
 
                 int id = Integer.parseInt(p[0].trim());
                 String nombre = p[1].trim();
                 String localidad = p[2].trim();
 
-                // Crear usando el constructor existente
                 Departamento d = new Departamento(nombre, localidad);
 
-                // Cambiar el ID mediante reflection
                 java.lang.reflect.Field field = Departamento.class.getDeclaredField("id");
                 field.setAccessible(true);
                 field.setInt(d, id);
@@ -68,39 +79,38 @@ public class DataStorage {
             e.printStackTrace();
         }
 
-        // Actualizar el ID persistente
         int max = lista.stream().mapToInt(Departamento::getId).max().orElse(0);
         saveLastId(max);
     }
+
 
     // ----------------------------------------------------
     // CARGAR ÚLTIMO ID
     // ----------------------------------------------------
     public static int loadLastId() {
-        File f = new File(LAST_ID_FILE);
-        if (!f.exists()) return 0;
+        if (!Files.exists(LAST_ID_FILE)) return 0;
 
-        try (BufferedReader br = new BufferedReader(new FileReader(f))) {
-            String linea = br.readLine();
-            if (linea != null)
-                return Integer.parseInt(linea.trim());
+        try {
+            String linea = Files.readString(LAST_ID_FILE, StandardCharsets.UTF_8).trim();
+            return linea.isEmpty() ? 0 : Integer.parseInt(linea);
         } catch (Exception e) {
             e.printStackTrace();
         }
-
         return 0;
     }
+
 
     // ----------------------------------------------------
     // GUARDAR ÚLTIMO ID
     // ----------------------------------------------------
     public static void saveLastId(int id) {
-        try (PrintWriter pw = new PrintWriter(new FileWriter(LAST_ID_FILE))) {
-            pw.println(id);
+        try {
+            Files.writeString(LAST_ID_FILE, String.valueOf(id), StandardCharsets.UTF_8);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
+
     // ----------------------------------------------------
 // BUSCAR DEPARTAMENTO POR ID
 // ----------------------------------------------------

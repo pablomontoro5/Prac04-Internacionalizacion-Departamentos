@@ -3,92 +3,105 @@ package data;
 import model.Departamento;
 import util.Logger;
 
-import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.List;
+import java.io.*;
+import java.util.*;
 
 public class Data {
 
-    private static final String FILE_NAME = "departamentos.tsv";
+
+    private static final Path BASE_DIR =
+            Paths.get(System.getProperty("user.home"), ".departamentosApp");
+
+    private static final Path DATA_FILE = BASE_DIR.resolve("departamentos.tsv");
+    private static final Path BACKUP_FILE = BASE_DIR.resolve("departamentos_backup.tsv");
+    private static final Path ID_FILE = BASE_DIR.resolve("last_id.txt");
+
     private static final List<Departamento> lista = new ArrayList<>();
 
-    // --------------------------------------------------
+    static {
+        try {
+            Files.createDirectories(BASE_DIR);
+        } catch (IOException e) {
+            throw new RuntimeException("No se pudo crear el directorio de datos", e);
+        }
+    }
+
+        // --------------------------------------------------
     // CARGAR DESDE ARCHIVO (solo se llama al iniciar)
     // --------------------------------------------------
-    public static void load() {
-        File f = new File(FILE_NAME);
-        if (!f.exists()) return;
+        public static void load() {
+            if (!Files.exists(DATA_FILE)) return;
 
-        int maxId = 0;
+            int maxId = 0;
 
-        try (BufferedReader br = new BufferedReader(new FileReader(f))) {
-            String linea;
+            try (BufferedReader br = Files.newBufferedReader(DATA_FILE, StandardCharsets.UTF_8)) {
+                String linea;
+                while ((linea = br.readLine()) != null) {
+                    if (linea.isBlank()) continue;
 
-            while ((linea = br.readLine()) != null) {
-                if (linea.isBlank()) continue;
+                    String[] p = linea.split("\t", -1);
+                    if (p.length < 3) continue;
 
-                String[] p = linea.split("\t",-1);
-                Logger.log("Cargados " + lista.size() + " departamentos desde archivo");
-                if (p.length < 3) continue;
+                    int id = Integer.parseInt(p[0].trim());
+                    String nombre = p[1].trim();
+                    String localidad = p[2].trim();
 
-                int id = Integer.parseInt(p[0].trim());
-                String nombre = p[1].trim();
-                String localidad = p[2].trim();
+                    Departamento d = new Departamento(nombre, localidad);
+                    d.setId(id);
+                    lista.add(d);
 
-                Departamento d = new Departamento(nombre, localidad);
-                d.setId(id);                  // Restaurar ID
-                lista.add(d);
+                    if (id > maxId) maxId = id;
+                }
 
-                if (id > maxId) maxId = id;
+                Departamento.setContador(maxId + 1);
+
+                // opcional: también persistes el último id para otras partes
+                saveLastId(maxId);
+
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-
-            // Actualizar contador para nuevos departamentos
-            Departamento.setContador(maxId + 1);
-
-        } catch (Exception e) {
-            e.printStackTrace();
         }
-    }
 
 
 
-    // --------------------------------------------------
+
+        // --------------------------------------------------
     // GUARDAR A ARCHIVO (UTF-8)
     // --------------------------------------------------
-    private static void save() {
-
-        // ---- COPIA DE SEGURIDAD ----
-        try {
-            File original = new File(FILE_NAME);
-            File backup = new File("departamentos_backup.tsv");
-
-            if (original.exists()) {
-                try (InputStream in = new FileInputStream(original);
-                     OutputStream out = new FileOutputStream(backup)) {
-                    in.transferTo(out);
+        private static void save() {
+            // backup
+            try {
+                if (Files.exists(DATA_FILE)) {
+                    Files.copy(DATA_FILE, BACKUP_FILE, java.nio.file.StandardCopyOption.REPLACE_EXISTING);
+                    Logger.log("Backup realizado");
                 }
-                Logger.log("Backup realizado");
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        // ---- GUARDAR ARCHIVO ----
-        try (PrintWriter pw = new PrintWriter(new OutputStreamWriter(
-                new FileOutputStream(FILE_NAME), StandardCharsets.UTF_8))) {
-
-            for (Departamento d : lista) {
-                pw.println(d.getId() + "\t" + d.getNombre() + "\t" + d.getLocalidad());
+            } catch (Exception e) {
+                e.printStackTrace();
             }
 
-            Logger.log("Archivo departamentos.tsv actualizado");
+            // guardar
+            try (BufferedWriter bw = Files.newBufferedWriter(DATA_FILE, StandardCharsets.UTF_8);
+                 PrintWriter pw = new PrintWriter(bw)) {
 
-        } catch (Exception e) {
-            e.printStackTrace();
+                for (Departamento d : lista) {
+                    pw.println(d.getId() + "\t" + d.getNombre() + "\t" + d.getLocalidad());
+                }
+
+                Logger.log("Archivo departamentos.tsv actualizado");
+
+                // guarda también el último id
+                int maxId = lista.stream().mapToInt(Departamento::getId).max().orElse(0);
+                saveLastId(maxId);
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
-    }
-
 
 
     // --------------------------------------------------
@@ -100,7 +113,9 @@ public class Data {
     }
 
     public static boolean removeDepartamento(int id) {
-        return lista.removeIf(d -> d.getId() == id);
+        boolean removed = lista.removeIf(d -> d.getId() == id);
+        if (removed) save();
+        return removed;
     }
 
 
@@ -128,21 +143,31 @@ public class Data {
     //  ELIMINAR DEPARTAMENTO Y REORDENAR IDS
     // =====================================================
     public static void eliminarDepartamento(int id) {
-
-        // 1. Eliminar el departamento con ese id
         lista.removeIf(d -> d.getId() == id);
-
-        // 2. Guardar la lista tal cual (sin tocar los demás IDs)
-        DataStorage.save(lista);
-
-        // 3. (Opcional pero recomendable) actualizar último ID al máximo id existente
-        DataStorage.saveLastIdFromList(lista);
+        save(); // esto ya guarda y actualiza last_id.txt dentro de BASE_DIR
     }
+
 
 
     public static int loadLastId() {
-        return IdStorage.loadLastId();
+        if (!Files.exists(ID_FILE)) return 0;
+        try {
+            String s = Files.readString(ID_FILE, StandardCharsets.UTF_8).trim();
+            return s.isEmpty() ? 0 : Integer.parseInt(s);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return 0;
+        }
     }
+
+    public static void saveLastId(int id) {
+        try {
+            Files.writeString(ID_FILE, String.valueOf(id), StandardCharsets.UTF_8);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 
     public static boolean existeDepartamento(String nombre, String localidad) {
         for (Departamento d : lista) {

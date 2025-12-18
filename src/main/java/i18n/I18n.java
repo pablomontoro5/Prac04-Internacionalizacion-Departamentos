@@ -19,12 +19,12 @@ public class I18n {
     // ==============================================
     public static void cargarIdiomas() {
 
-        try (InputStream is = I18n.class.getResourceAsStream("/idiomas.txt")) {
+        try (InputStream is = I18n.class.getClassLoader().getResourceAsStream("idiomas.txt")) {
 
             if (is == null)
                 throw new RuntimeException("No se pudo cargar idiomas.txt desde resources");
 
-            BufferedReader br = new BufferedReader(new InputStreamReader(is, "UTF-8"));
+            BufferedReader br = new BufferedReader(new InputStreamReader(is, java.nio.charset.StandardCharsets.UTF_8));
 
             idiomas.clear();
 
@@ -32,9 +32,8 @@ public class I18n {
             while ((codigo = br.readLine()) != null) {
 
                 codigo = codigo.trim();
-                if (codigo.isEmpty()) continue;   // por si hay líneas en blanco
+                if (codigo.isEmpty()) continue;
 
-                // nº cadenas
                 int numCadenas = Integer.parseInt(br.readLine().trim());
                 List<String> cadenas = new ArrayList<>();
 
@@ -42,7 +41,6 @@ public class I18n {
                     cadenas.add(br.readLine().trim());
                 }
 
-                // nº imágenes
                 int numImgs = Integer.parseInt(br.readLine().trim());
                 List<ImageIcon> imgs = new ArrayList<>();
 
@@ -57,14 +55,13 @@ public class I18n {
             if (idiomas.isEmpty())
                 throw new RuntimeException("No se ha cargado ningún idioma");
 
-            idiomaActual = idiomas.get(0); // idioma por defecto
-            System.out.println("Cargados " + idiomas.size() + " idiomas.");
-            System.out.println("Idioma cargado por defecto: " + idiomaActual.getCodigo());
+            idiomaActual = idiomas.get(0);
 
         } catch (Exception e) {
             throw new RuntimeException("Error cargando idiomas: " + e.getMessage(), e);
         }
     }
+
 
 
     // ==============================================
